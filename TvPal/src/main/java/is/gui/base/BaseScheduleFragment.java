@@ -4,11 +4,11 @@ import android.app.Activity;
 import android.support.v4.app.Fragment;
 
 /**
- * Created by Arnar on 5.12.2013.
+ * Created by Arnar on 9.2.2014.
  */
-public class BaseFragment extends Fragment
+public class BaseScheduleFragment extends Fragment
 {
-    protected IActivity activity;
+    protected IScheduleActivity activity;
 
     @Override
     public void onAttach (Activity activity)
@@ -16,7 +16,7 @@ public class BaseFragment extends Fragment
         super.onAttach(activity);
         try
         {
-            this.activity = (IActivity) activity;
+            this.activity = (IScheduleActivity) activity;
         }
         catch (ClassCastException e)
         {

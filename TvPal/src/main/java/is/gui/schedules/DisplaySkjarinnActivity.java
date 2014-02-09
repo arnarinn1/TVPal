@@ -10,19 +10,20 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.slidinglayer.SlidingLayer;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import is.gui.base.BaseFragmentActivity;
 import is.contracts.datacontracts.EventData;
 import is.parsers.cache.SchedulesCache;
 import is.parsers.schedules.SkjarinnScheduleParser;
@@ -40,7 +41,7 @@ import is.tvpal.R;
  * @see import android.support.v4.app.FragmentActivity;
  */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-public class DisplaySkjarinnActivity extends BaseFragmentActivity
+public class DisplaySkjarinnActivity extends BaseScheduleActivity
 {
     public static final String skjarinnUrl = "http://www.skjarinn.is/einn/dagskrarupplysingar/?channel_id=7&weeks=1&output_format=xml";
 
@@ -51,6 +52,7 @@ public class DisplaySkjarinnActivity extends BaseFragmentActivity
     private ProgressBar mProgressBar;
     private TextView mNoResults;
     private PagerSlidingTabStrip mTabStrip;
+    private SlidingLayer mSlidingLayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -67,6 +69,7 @@ public class DisplaySkjarinnActivity extends BaseFragmentActivity
         mProgressBar = (ProgressBar) findViewById(R.id.progressSchedules);
         mNoResults = (TextView) findViewById(R.id.noSchedules);
         mTabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+        mSlidingLayer = (SlidingLayer) findViewById(R.id.sliderDetailedInfo);
 
         new DownloadSkjarinnSchedules(this).execute(skjarinnUrl);
 
@@ -213,6 +216,22 @@ public class DisplaySkjarinnActivity extends BaseFragmentActivity
             }
 
             return false;
+        }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        switch (keyCode)
+        {
+            case KeyEvent.KEYCODE_BACK:
+                if (mSlidingLayer.isOpened())
+                {
+                    mSlidingLayer.closeLayer(true);
+                    return true;
+                }
+            default:
+                return super.onKeyDown(keyCode, event);
         }
     }
 }

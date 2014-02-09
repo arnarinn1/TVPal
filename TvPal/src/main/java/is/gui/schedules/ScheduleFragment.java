@@ -6,22 +6,30 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.slidinglayer.SlidingLayer;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import is.gui.base.BaseFragment;
 import is.contracts.datacontracts.EventData;
+import is.gui.base.BaseScheduleFragment;
+import is.gui.base.IActivity;
 import is.handlers.adapters.EventAdapter;
 import is.tvpal.R;
 
-public class ScheduleFragment extends BaseFragment implements AdapterView.OnItemClickListener
+public class ScheduleFragment extends BaseScheduleFragment implements AdapterView.OnItemClickListener
 {
-    public static final String EXTRA_EVENT = "is.activites.scheduleActivites.EVENT";
     public static final String EXTRA_SCHEDULE_DAY = "is.activites.scheduleActivites.SCHEDULE_DAY";
     public static final String EXTRA_IMG_RESOURCE = "is.activites.scheduleActivites.IMGRESOURCE";
 
@@ -33,6 +41,7 @@ public class ScheduleFragment extends BaseFragment implements AdapterView.OnItem
     private TextView mEventStartTime;
     private TextView mEventDuration;
     private TextView mEventDescription;
+    private CheckBox mCheckboxNotification;
 
     public ScheduleFragment() {}
 
@@ -75,7 +84,7 @@ public class ScheduleFragment extends BaseFragment implements AdapterView.OnItem
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l)
     {
-        EventData event = mAdapter.getItem(position);
+        final EventData event = mAdapter.getItem(position);
 
         if (!mSlidingLayer.isOpened())
         {
@@ -98,6 +107,13 @@ public class ScheduleFragment extends BaseFragment implements AdapterView.OnItem
                         , event.getDuration()));
             }
 
+            mCheckboxNotification.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v)
+                {
+                    GetReminder(event);
+                }
+            });
         }
     }
 
@@ -112,6 +128,70 @@ public class ScheduleFragment extends BaseFragment implements AdapterView.OnItem
             mEventStartTime = (TextView) mDetailedScrollView.findViewById(R.id.event_starting);
             mEventDuration = (TextView) mDetailedScrollView.findViewById(R.id.event_duration);
             mEventDescription = (TextView) mDetailedScrollView.findViewById(R.id.event_description);
+            mCheckboxNotification = (CheckBox) mDetailedScrollView.findViewById(R.id.getReminder);
         }
+    }
+
+    public void GetReminder(EventData mEvent)
+    {
+        if (!mEvent.getStartTime().isEmpty() && !mEvent.getEventDate().isEmpty())
+        {
+            String year = mEvent.getEventDate().substring(2,4);
+            String month = mEvent.getEventDate().substring(5,7);
+            String day = mEvent.getEventDate().substring(8);
+            int hour = Integer.parseInt(mEvent.getStartTime().substring(0,2));
+            int minute = Integer.parseInt(mEvent.getStartTime().substring(3));
+
+            Date notificationDate = FormatNotificationDate(String.format("%s/%s/%s", month, day, year));
+
+            if (notificationDate != null)
+            {
+                String[] showInfo = { mEvent.getTitle(), mEvent.getStartTime()};
+
+                Calendar alarmDate = Calendar.getInstance();
+                alarmDate.setTime(notificationDate);
+                alarmDate.set(Calendar.HOUR_OF_DAY, hour);
+                alarmDate.set(Calendar.MINUTE, minute-15);
+
+                Calendar dateNow = Calendar.getInstance();
+                dateNow.setTime(new Date());
+
+                // Ask our service to set an alarm for that date, this activity talks to the client that talks to the service
+                if(alarmDate.before(dateNow))
+                {
+                    Toast.makeText(mContext, "Dagskrárliður hefur nú þegar verið sýndur", Toast.LENGTH_SHORT).show();
+                }
+                else if (alarmDate.after(dateNow))
+                {
+                    activity.getScheduleClient().setAlarmForNotification(alarmDate, showInfo);
+                    // Notify the user what they just did
+                    Toast.makeText(mContext, "Áminning sett: " + formatDate(alarmDate.getTime()), Toast.LENGTH_LONG).show();
+                }
+                else
+                {
+                    Toast.makeText(mContext, "Villa kom upp við skráningu", Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+    }
+
+    private String formatDate(Date date)
+    {
+        return new SimpleDateFormat("yyyy-MM-dd kk:mm").format(date);
+    }
+
+    private Date FormatNotificationDate(String date)
+    {
+        try
+        {
+            DateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
+            return dateFormat.parse(date);
+        }
+        catch(ParseException e)
+        {
+            Toast.makeText(mContext, "Ekki gekk að vista áminningu", Toast.LENGTH_SHORT).show();
+        }
+
+        return null;
     }
 }

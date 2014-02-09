@@ -7,7 +7,7 @@ import android.view.MenuItem;
 /**
  * Created by Arnar on 21.11.2013.
  */
-public class BaseFragmentActivity extends FragmentActivity implements IContext
+public class BaseFragmentActivity extends FragmentActivity implements IActivity
 {
     @Override
     public boolean onOptionsItemSelected(MenuItem item)

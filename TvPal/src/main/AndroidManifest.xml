@@ -36,10 +36,6 @@
             android:label="@string/title_activity_display_skjarinn" >
         </activity>
         <activity
-            android:name="is.gui.schedules.DetailedEventActivity"
-            android:label="@string/title_activity_detailed_event" >
-        </activity>
-        <activity
             android:name="is.gui.shows.MyShowsActivity"
             android:label="@string/title_activity_my_shows" >
         </activity>

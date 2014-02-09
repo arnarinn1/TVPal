@@ -11,12 +11,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.slidinglayer.SlidingLayer;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -26,6 +28,7 @@ import java.util.List;
 import is.gui.base.BaseFragmentActivity;
 import is.gui.MainActivity;
 import is.contracts.datacontracts.EventData;
+import is.gui.reminders.ScheduleClient;
 import is.parsers.cache.SchedulesCache;
 import is.parsers.schedules.Stod2ScheduleParser;
 import is.utilities.ConnectionListener;
@@ -41,16 +44,16 @@ import is.tvpal.R;
  * @see android.app.ListActivity
  */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-public class DisplayStod2Activity extends BaseFragmentActivity
+public class DisplayStod2Activity extends BaseScheduleActivity
 {
     private List<EventData> mEvents;
     private String mWorkingDate;
-    private ViewPager mViewPager;
     private ProgressBar mProgressBar;
     private TextView mNoResults;
     private String mScheduleCache;
     private String mLatestUpdateCache;
     private PagerSlidingTabStrip mTabStrip;
+    private SlidingLayer mSlidingLayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -68,6 +71,7 @@ public class DisplayStod2Activity extends BaseFragmentActivity
         mProgressBar = (ProgressBar) findViewById(R.id.progressSchedules);
         mNoResults = (TextView) findViewById(R.id.noSchedules);
         mTabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+        mSlidingLayer = (SlidingLayer) findViewById(R.id.sliderDetailedInfo);
 
         Intent intent = getIntent();
         new DownloadStod2Schedules(this).execute(intent.getStringExtra(MainActivity.EXTRA_STOD2));
@@ -85,7 +89,7 @@ public class DisplayStod2Activity extends BaseFragmentActivity
     {
         SchedulePagerAdapter mScheduleAdapter = new SchedulePagerAdapter(getSupportFragmentManager(), this);
 
-        mViewPager = (ViewPager) findViewById(R.id.pagerSchedules);
+        ViewPager mViewPager = (ViewPager) findViewById(R.id.pagerSchedules);
         mViewPager.setAdapter(mScheduleAdapter);
         mTabStrip.setViewPager(mViewPager);
     }
@@ -218,6 +222,22 @@ public class DisplayStod2Activity extends BaseFragmentActivity
             }
 
             return false;
+        }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        switch (keyCode)
+        {
+            case KeyEvent.KEYCODE_BACK:
+                if (mSlidingLayer.isOpened())
+                {
+                    mSlidingLayer.closeLayer(true);
+                    return true;
+                }
+            default:
+                return super.onKeyDown(keyCode, event);
         }
     }
 }

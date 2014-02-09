@@ -89,7 +89,7 @@ public class WatchlistActivity extends BaseFragmentActivity implements AdapterVi
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+    public void onItemClick(AdapterView<?> parent, View view, final int position, long id)
     {
         Cursor movie = (Cursor) mAdapter.getItem(position);
 
@@ -99,12 +99,22 @@ public class WatchlistActivity extends BaseFragmentActivity implements AdapterVi
 
             final String posterUrl = StringUtil.formatTrendingPosterUrl(movie.getString(3), "-138");
 
-
             Picasso.with(this)
                     .load(posterUrl)
                     .into(mWatchListPoster);
 
             mWatchlistDesc.setText(movie.getString(2));
+
+            mCloseButton.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    mSlidingLayer.closeLayer(true);
+
+                    RemoveMovieFromWatchlist(position);
+                }
+            });
         }
     }
 
@@ -136,14 +146,5 @@ public class WatchlistActivity extends BaseFragmentActivity implements AdapterVi
     private void AttachEventListeners()
     {
         mGridView.setOnItemClickListener(this);
-
-        mCloseButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                mSlidingLayer.closeLayer(true);
-            }
-        });
     }
 }

@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import is.gui.base.BaseFragmentActivity;
 import is.contracts.datacontracts.EventData;
 import is.parsers.cache.SchedulesCache;
 import is.parsers.schedules.RuvScheduleParser;
@@ -44,7 +43,7 @@ import is.tvpal.R;
  */
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-public class DisplayRuvActivity extends BaseFragmentActivity
+public class DisplayRuvActivity extends BaseScheduleActivity
 {
     public static final String RuvUrl = "http://muninn.ruv.is/files/xml/ruv/";
 
