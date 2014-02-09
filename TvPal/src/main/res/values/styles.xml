@@ -48,5 +48,23 @@
         <item name="pstsUnderlineColor">#33b5e5</item>
         <item name="android:background">#222</item>
     </style>
+    
+    <!-- BaseTextStyles -->
+    <style name="BaseTextStyle" parent="@android:style/TextAppearance.Medium">
+        <item name="android:typeface">serif</item>
+        <item name="android:textColor">#fff</item>
+    </style>
+
+    <style name="BaseTextStyle.Small">
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="BaseTextStyle.Normal">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="BaseTextStyle.Big">
+        <item name="android:textSize">20sp</item>
+    </style>
 
 </resources>

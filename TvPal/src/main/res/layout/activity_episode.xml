@@ -8,7 +8,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="#222"
+        android:background="@color/tvpal_theme_color"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -35,14 +35,11 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Episode"
-            android:textSize="22sp"
+            android:layout_marginLeft="20sp"
+            android:layout_marginRight="20sp"
             android:gravity="center"
             android:textStyle="bold"
-            android:textColor="#ddd"
-            android:typeface="serif"
-            android:layout_marginLeft="20sp"
-            android:layout_marginRight="20sp"/>
+            style="@style/BaseTextStyle.Big"/>
 
         <CheckBox
             android:button="@drawable/eye_checkbox_blue_small"
