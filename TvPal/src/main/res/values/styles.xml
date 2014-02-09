@@ -48,6 +48,18 @@
         <item name="pstsUnderlineColor">#33b5e5</item>
         <item name="android:background">#222</item>
     </style>
+
+    <!-- Base Gridview Styles-->
+    <style name="BaseGridViewStyle">
+        <item name="android:numColumns">auto_fit</item>
+        <item name="android:stretchMode">columnWidth</item>
+        <item name="android:gravity">center</item>
+        <item name="android:columnWidth">300sp</item>
+        <item name="android:verticalSpacing">10dip</item>
+        <item name="android:horizontalSpacing">10dip</item>
+        <item name="android:listSelector">@drawable/custom_list_selector</item>
+    </style>
+    
     
     <!-- BaseTextStyles -->
     <style name="BaseTextStyle" parent="@android:style/TextAppearance.Medium">

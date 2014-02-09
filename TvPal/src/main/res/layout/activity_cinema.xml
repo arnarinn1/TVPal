@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:text="@string/no_results"
         android:layout_centerInParent="true"
-        android:visibility="visible"
+        android:visibility="gone"
         style="@style/BaseTextStyle.Big"/>
 
 </RelativeLayout>
