@@ -7,8 +7,8 @@
 
     <ImageView
         android:id="@+id/traktMoviePoster"
-        android:layout_width="64sp"
-        android:layout_height="86sp"
+        android:layout_width="70sp"
+        android:layout_height="100sp"
         android:scaleType="centerCrop" />
 
     <TextView android:id="@+id/traktMovieTitle"
@@ -34,7 +34,7 @@
         android:textColor="#fff"
         android:maxLines="3"
         android:paddingLeft="10sp"
-        android:lineSpacingMultiplier="1.2"
+        android:lineSpacingMultiplier="1.1"
         android:typeface="serif"
         android:ellipsize="end"/>
 
@@ -43,7 +43,6 @@
         android:layout_height="1dp"
         android:layout_below="@id/traktMoviePoster"
         android:layout_width="fill_parent"
-        android:background="#34b1ff"
-        android:layout_marginTop="5sp"/>
+        android:background="#34b1ff"/>
 
 </RelativeLayout>

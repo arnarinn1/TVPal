@@ -4,4 +4,5 @@
     <color name="action_bar_color">#1C4154</color>
     <color name="action_bar_text_color">#fff</color>
     <color name="base_color">#34b1ff</color>
+    <color name="button_start_color">#002E2C</color>
 </resources>

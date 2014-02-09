@@ -8,21 +8,27 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.slidinglayer.SlidingLayer;
+import com.squareup.picasso.Picasso;
+
 import is.gui.base.BaseFragmentActivity;
 import is.handlers.adapters.WatchListAdapter;
 import is.handlers.database.DbMovies;
 import is.tvpal.R;
+import is.utilities.StringUtil;
 
 public class WatchlistActivity extends BaseFragmentActivity implements AdapterView.OnItemClickListener
 {
     private WatchListAdapter mAdapter;
     private GridView mGridView;
     private SlidingLayer mSlidingLayer;
-    private TextView mWatchListTitle;
+    private ImageView mWatchListPoster;
     private TextView mWatchlistDesc;
+    private Button mCloseButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -37,12 +43,8 @@ public class WatchlistActivity extends BaseFragmentActivity implements AdapterVi
     {
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mGridView = (GridView) findViewById(R.id.trendingTrakt);
-        mSlidingLayer = (SlidingLayer) findViewById(R.id.slidingLayer1);
-        mWatchListTitle = (TextView) findViewById(R.id.watchlistTitle);
-        mWatchlistDesc = (TextView) findViewById(R.id.watchListDesc);
-
-        mGridView.setOnItemClickListener(this);
+        AttachViews();
+        AttachEventListeners();
 
         registerForContextMenu(mGridView);
         SetAdapter();
@@ -95,7 +97,13 @@ public class WatchlistActivity extends BaseFragmentActivity implements AdapterVi
         {
             mSlidingLayer.openLayer(true);
 
-            mWatchListTitle.setText(movie.getString(1));
+            final String posterUrl = StringUtil.formatTrendingPosterUrl(movie.getString(3), "-138");
+
+
+            Picasso.with(this)
+                    .load(posterUrl)
+                    .into(mWatchListPoster);
+
             mWatchlistDesc.setText(movie.getString(2));
         }
     }
@@ -114,5 +122,28 @@ public class WatchlistActivity extends BaseFragmentActivity implements AdapterVi
             default:
                 return super.onKeyDown(keyCode, event);
         }
+    }
+
+    private void AttachViews()
+    {
+        mGridView = (GridView) findViewById(R.id.trendingTrakt);
+        mSlidingLayer = (SlidingLayer) findViewById(R.id.slidingLayer1);
+        mWatchListPoster = (ImageView) findViewById(R.id.watchlistTitle);
+        mWatchlistDesc = (TextView) findViewById(R.id.watchListDesc);
+        mCloseButton = (Button) findViewById(R.id.closeSlider);
+    }
+
+    private void AttachEventListeners()
+    {
+        mGridView.setOnItemClickListener(this);
+
+        mCloseButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                mSlidingLayer.closeLayer(true);
+            }
+        });
     }
 }

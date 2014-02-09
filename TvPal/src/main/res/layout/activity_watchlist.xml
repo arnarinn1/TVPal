@@ -41,32 +41,50 @@
         app:stickTo="right"
         app:closeOnTapEnabled="false">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/base_color"
-            android:padding="10sp">
+        <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:fadingEdge="vertical"
+            android:fillViewport="true">
 
-            <TextView
-                android:id="@+id/watchlistTitle"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="asdrasdfasdf"
-                android:typeface="serif"
-                android:textSize="20sp"
-                android:textColor="#fff"/>
+                android:background="@color/tvpal_theme_color"
+                android:padding="10sp">
 
-            <TextView
-                android:id="@+id/watchListDesc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/watchlistTitle"
-                android:typeface="serif"
-                android:textSize="15sp"
-                android:textColor="#fff"/>
+                <ImageView
+                    android:id="@+id/watchlistTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="200sp"
+                    android:layout_marginLeft="20sp"
+                    android:layout_marginRight="20sp"/>
 
-        </RelativeLayout>
+                <TextView
+                    android:id="@+id/watchListDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/watchlistTitle"
+                    android:paddingTop="10sp"
+                    style="@style/BaseTextStyle.Normal"/>
+
+                <Button
+                    android:id="@+id/closeSlider"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/watchListDesc"
+                    android:gravity="center"
+                    android:layout_centerInParent="true"
+                    android:textColor="#fff"
+                    android:text="Remove Movie"
+                    android:typeface="serif"
+                    android:layout_marginTop="10sp"
+                    android:background="@drawable/button_selector"
+                    style="?android:attr/borderlessButtonStyle"/>
+
+            </RelativeLayout>
+
+        </ScrollView>
 
     </com.slidinglayer.SlidingLayer>
 
