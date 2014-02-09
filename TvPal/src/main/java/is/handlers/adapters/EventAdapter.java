@@ -27,17 +27,19 @@ public class EventAdapter extends BaseAdapter
     private Context context;
     private int layoutResourceId;
     private List<EventData> schedule;
+    private int mImageResourceId;
 
     /**
         @param context This is the current context of the application activity
         @param layoutResourceId The id of the xml layout
         @param schedule List of EventData
      */
-    public EventAdapter(Context context, int layoutResourceId, List<EventData> schedule)
+    public EventAdapter(Context context, int layoutResourceId, List<EventData> schedule, int imageResourceId)
     {
         this.context = context;
         this.layoutResourceId = layoutResourceId;
         this.schedule = schedule;
+        this.mImageResourceId = imageResourceId;
     }
 
     static class EventHolder
@@ -74,33 +76,7 @@ public class EventAdapter extends BaseAdapter
 
         EventData schedule = getItem(position);
 
-        String serviceName = schedule.getServiceName();
-
-        if (serviceName.equalsIgnoreCase("Skjar Einn")) {
-            holder.imgIcon.setImageResource(R.drawable.skjareinn_64);
-        }
-        else if (serviceName.equalsIgnoreCase(context.getResources().getString(R.string.ruv))) {
-            holder.imgIcon.setImageResource(R.drawable.ruv_svartur_64);
-        }
-        else if (serviceName.equalsIgnoreCase("STOD2")) {
-            holder.imgIcon.setImageResource(R.drawable.stod2_64);
-        }
-        else if(serviceName.equalsIgnoreCase("SPORT")) {
-            holder.imgIcon.setImageResource(R.drawable.stod2sport_64);
-        }
-        else if(serviceName.equalsIgnoreCase("STOD3")) {
-            holder.imgIcon.setImageResource(R.drawable.stod3_64);
-        }
-        else if(serviceName.equalsIgnoreCase("BIO")) {
-            holder.imgIcon.setImageResource(R.drawable.stod2bio_64);
-        }
-        else if(serviceName.equalsIgnoreCase("GULL")){
-            holder.imgIcon.setImageResource(R.drawable.stod2gull_64);
-        }
-        else if(serviceName.equalsIgnoreCase("SPORT2")) {
-            holder.imgIcon.setImageResource(R.drawable.stod2sport2_64);
-        }
-
+        holder.imgIcon.setImageResource(mImageResourceId);
         holder.title.setText(schedule.getTitle());
         holder.startTime.setText(String.format("Byrjar: %s",schedule.getStartTime()));
         holder.duration.setText(String.format("Lengd: %s", schedule.getDuration()));

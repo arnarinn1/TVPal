@@ -115,6 +115,7 @@ public class DisplayRuvActivity extends BaseFragmentActivity
                     _todaySchedule.add(e);
             }
 
+            args.putInt(ScheduleFragment.EXTRA_IMG_RESOURCE, R.drawable.ruv_svartur_64);
             args.putSerializable(ScheduleFragment.EXTRA_SCHEDULE_DAY, _todaySchedule);
             fragment.setArguments(args);
             return fragment;

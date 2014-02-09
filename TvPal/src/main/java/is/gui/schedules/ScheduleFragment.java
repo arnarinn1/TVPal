@@ -23,6 +23,7 @@ public class ScheduleFragment extends BaseFragment implements AdapterView.OnItem
 {
     public static final String EXTRA_EVENT = "is.activites.scheduleActivites.EVENT";
     public static final String EXTRA_SCHEDULE_DAY = "is.activites.scheduleActivites.SCHEDULE_DAY";
+    public static final String EXTRA_IMG_RESOURCE = "is.activites.scheduleActivites.IMGRESOURCE";
 
     private EventAdapter mAdapter;
     private Context mContext;
@@ -52,12 +53,13 @@ public class ScheduleFragment extends BaseFragment implements AdapterView.OnItem
 
         Bundle args = getArguments();
         ArrayList<EventData> _todaySchedule = (ArrayList<EventData>)args.getSerializable(EXTRA_SCHEDULE_DAY);
+        int imageResourceId = args.getInt(EXTRA_IMG_RESOURCE);
 
         if (_todaySchedule != null && _todaySchedule.size() > 0)
         {
             AttachViews();
 
-            mAdapter = new EventAdapter(mContext, R.layout.listview_event, _todaySchedule);
+            mAdapter = new EventAdapter(mContext, R.layout.listview_event, _todaySchedule, imageResourceId);
 
             ((ListView) getView().findViewById(R.id.schedules)).setAdapter(mAdapter);
             ((ListView) getView().findViewById(R.id.schedules)).setOnItemClickListener(this);

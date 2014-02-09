@@ -121,6 +121,7 @@ public class DisplayStod2Activity extends BaseFragmentActivity
                     _todaySchedule.add(e);
             }
 
+            args.putInt(ScheduleFragment.EXTRA_IMG_RESOURCE, R.drawable.stod2_64);
             args.putSerializable(ScheduleFragment.EXTRA_SCHEDULE_DAY, _todaySchedule);
             fragment.setArguments(args);
             return fragment;
