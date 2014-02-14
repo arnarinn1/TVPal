@@ -163,6 +163,7 @@ public class DetailedMovieActivity extends BaseActivity
                         intent.putExtra(TraktCommentsActivity.EXTRA_Title, movie.getTitle());
                         intent.putExtra(TraktCommentsActivity.EXTRA_ImdbId, TraktCommentUrl + movie.getImdbId());
                         startActivity(intent);
+                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     }
                 });
 
@@ -196,6 +197,7 @@ public class DetailedMovieActivity extends BaseActivity
                         Intent intent = new Intent(mContext, RelatedMovieActivity.class);
                         intent.putExtra(EXTRA_MOVIEID, movie.getImdbId());
                         startActivity(intent);
+                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     }
                 });
             }
