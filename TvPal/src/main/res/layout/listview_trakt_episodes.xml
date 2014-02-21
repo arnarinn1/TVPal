@@ -7,9 +7,9 @@
 
     <ImageView
         android:id="@+id/traktPoster"
-        android:layout_width="64sp"
-        android:layout_height="86sp"
-        android:scaleType="centerCrop"/>
+        android:layout_width="70sp"
+        android:layout_height="100sp"
+        android:scaleType="centerCrop" />
 
     <TextView android:id="@+id/traktTitle"
         android:layout_width="wrap_content"
@@ -54,7 +54,6 @@
         android:layout_height="1dp"
         android:layout_below="@id/traktPoster"
         android:layout_width="fill_parent"
-        android:background="#34b1ff"
-        android:layout_marginTop="5sp"/>
+        android:background="#34b1ff"/>
 
 </RelativeLayout>

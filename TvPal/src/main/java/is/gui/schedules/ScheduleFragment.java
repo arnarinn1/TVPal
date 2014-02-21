@@ -86,6 +86,8 @@ public class ScheduleFragment extends BaseScheduleFragment implements AdapterVie
     {
         final EventData event = mAdapter.getItem(position);
 
+        mCheckboxNotification.setChecked(false);
+
         if (!mSlidingLayer.isOpened())
         {
             mSlidingLayer.openLayer(true);

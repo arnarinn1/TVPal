@@ -77,6 +77,7 @@ public class OverviewFragment extends BaseFragment
                     intent.putExtra(DetailedMovieActivity.EXTRA_MOVIE, mCursor.getString(Series.Name));
                     intent.putExtra(DetailedMovieActivity.EXTRA_MOVIEID, TraktCommentUrl + mCursor.getString(Series.ImdbId));
                     startActivity(intent);
+                    getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 }
             });
 

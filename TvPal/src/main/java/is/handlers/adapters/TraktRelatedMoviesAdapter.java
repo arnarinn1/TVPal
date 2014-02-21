@@ -14,6 +14,9 @@ import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 import is.contracts.datacontracts.trakt.TraktMovieDetailedData;
 import is.tvpal.R;
@@ -25,14 +28,12 @@ public class TraktRelatedMoviesAdapter extends BaseAdapter
     private Context mContext;
     private int layoutResourceId;
     private List<TraktMovieDetailedData> mMovies;
-    private SparseArray<Bitmap> mPosters;
 
     public TraktRelatedMoviesAdapter(Context context, int layoutResourceId, List<TraktMovieDetailedData> movies)
     {
         this.mContext = context;
         this.layoutResourceId = layoutResourceId;
         this.mMovies = movies;
-        this.mPosters = new SparseArray<Bitmap>();
     }
 
     static class RelatedMovieHolder
@@ -42,7 +43,6 @@ public class TraktRelatedMoviesAdapter extends BaseAdapter
         ImageView poster;
         TextView runtime;
         TextView rating;
-        int position;
     }
 
     @Override
@@ -73,74 +73,19 @@ public class TraktRelatedMoviesAdapter extends BaseAdapter
 
         final TraktMovieDetailedData movie = getItem(position);
 
-        holder.position = position;
-
         holder.overview.setText(String.format("%s (%s)", movie.getOverview(), movie.getReleaseYear()));
         holder.title.setText(movie.getTitle());
 
         holder.rating.setText(movie.getRating().getPercentage() + "%");
         holder.runtime.setText(movie.getRuntime() + " min");
 
-        if (mPosters.indexOfKey(position) < 0)
-        {
-            holder.poster.setVisibility(View.INVISIBLE);
-            new GetPosterWorker(movie.getImage().getPoster(), position).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, holder);
-        }
-        else
-        {
-            holder.poster.setImageBitmap(mPosters.get(position, null));
-        }
+        Picasso.with(mContext)
+                .load(movie.getImage()
+                .getPoster())
+                .skipMemoryCache()
+                .into(holder.poster);
 
         return row;
-    }
-
-    private class GetPosterWorker extends AsyncTask<RelatedMovieHolder, Void, Bitmap>
-    {
-        private String posterUrl;
-        private RelatedMovieHolder viewHolder;
-        private int position;
-
-        public GetPosterWorker(String posterUrl, int position)
-        {
-            this.posterUrl = posterUrl;
-            this.position = position;
-        }
-
-        @Override
-        protected Bitmap doInBackground(RelatedMovieHolder... viewHolders)
-        {
-            try
-            {
-                this.viewHolder = viewHolders[0];
-                return GetPoster();
-            }
-            catch (Exception ex)
-            {
-                Log.e(getClass().getName(), ex.getMessage());
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap)
-        {
-            if(viewHolder.position == position)
-            {
-                viewHolder.poster.setImageBitmap(bitmap);
-
-                Animation fadeInAnimation = AnimationUtils.loadAnimation(mContext, R.anim.abc_fade_in);
-                viewHolder.poster.startAnimation(fadeInAnimation);
-
-                mPosters.put(position, bitmap);
-                viewHolder.poster.setVisibility(View.VISIBLE);
-            }
-        }
-
-        private Bitmap GetPoster()
-        {
-            String formattedPosterUrl = StringUtil.formatTrendingPosterUrl(posterUrl, "-138");
-            return PictureTask.getBitmapFromUrl(formattedPosterUrl);
-        }
     }
 
     @Override
