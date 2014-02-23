@@ -1,6 +1,7 @@
 package is.parsers.tvdb;
 
 import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 import java.io.IOException;
@@ -42,7 +43,8 @@ public class TvDbShowParser extends DefaultHandler {
     {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         SAXParser parser = factory.newSAXParser();
-        parser.parse(baseURL, this);
+        InputSource source = new InputSource(baseURL);
+        parser.parse(source, this);
     }
 
     @Override
