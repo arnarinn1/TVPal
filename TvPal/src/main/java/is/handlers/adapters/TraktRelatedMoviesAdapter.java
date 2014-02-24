@@ -80,9 +80,7 @@ public class TraktRelatedMoviesAdapter extends BaseAdapter
         holder.runtime.setText(movie.getRuntime() + " min");
 
         Picasso.with(mContext)
-                .load(movie.getImage()
-                .getPoster())
-                .skipMemoryCache()
+                .load(StringUtil.formatTrendingPosterUrl(movie.getImage().getPoster(), "-138"))
                 .into(holder.poster);
 
         return row;
