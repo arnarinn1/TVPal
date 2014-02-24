@@ -2,24 +2,30 @@ package is.gui.movies;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.ProgressBar;
 
 import java.util.List;
+
 import is.gui.base.BaseActivity;
 import is.contracts.datacontracts.trakt.TraktMovieDetailedData;
 import is.handlers.adapters.TraktRelatedMoviesAdapter;
-import is.parsers.trakt.TraktParser;
 import is.tvpal.R;
+import is.webservices.RetrofitUtil;
+import is.webservices.TraktService;
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class RelatedMovieActivity extends BaseActivity
 {
     private GridView mGridView;
     private ProgressBar mProgressBar;
+
+    private Context getContext() { return this;}
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -40,57 +46,29 @@ public class RelatedMovieActivity extends BaseActivity
         mGridView = (GridView) findViewById(R.id.relatedMovies);
         mProgressBar = (ProgressBar) findViewById(R.id.progressIndicator);
 
-        new GetRelatedMoviesWorker(this, imdbId).execute();
+        RestAdapter restAdapter = RetrofitUtil.RetrofitRestAdapterInstance();
+        TraktService service = restAdapter.create(TraktService.class);
+
+        service.getRelatedMovies(imdbId, relatedMoviesCallback);
     }
 
-    private class GetRelatedMoviesWorker extends AsyncTask<String, Void, List<TraktMovieDetailedData>>
+    Callback<List<TraktMovieDetailedData>> relatedMoviesCallback = new Callback<List<TraktMovieDetailedData>>()
     {
-        private String imdbId;
-        private Context mContext;
-
-        public GetRelatedMoviesWorker(Context context, String imdbId)
-        {
-            this.imdbId = imdbId;
-            this.mContext = context;
-        }
-
         @Override
-        protected List<TraktMovieDetailedData> doInBackground(String... strings)
-        {
-            try
-            {
-                return GetReleatedMovies();
-            }
-            catch (Exception ex)
-            {
-                Log.e(getClass().getName(), ex.getMessage());
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPreExecute()
-        {
-            mProgressBar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected void onPostExecute(List<TraktMovieDetailedData> movies)
+        public void success(List<TraktMovieDetailedData> movies, Response response)
         {
             if (movies == null || movies.size() != 0)
-                mGridView.setAdapter(new TraktRelatedMoviesAdapter(mContext, R.layout.listview_related_movie, movies));
+                mGridView.setAdapter(new TraktRelatedMoviesAdapter(getContext(), R.layout.listview_related_movie, movies));
 
             mProgressBar.setVisibility(View.GONE);
         }
 
-        private List<TraktMovieDetailedData> GetReleatedMovies()
+        @Override
+        public void failure(RetrofitError retrofitError)
         {
-            TraktParser parser = new TraktParser();
-
-            return parser.GetReleatedMovies(imdbId);
+            mProgressBar.setVisibility(View.GONE);
         }
-    }
+    };
 
     @Override
     public void onBackPressed()

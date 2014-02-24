@@ -9,24 +9,37 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import java.util.List;
+
+import is.contracts.datacontracts.trakt.TraktMovieData;
 import is.gui.base.BaseActivity;
 import is.contracts.datacontracts.trakt.TraktComment;
 import is.handlers.adapters.TraktCommentAdapter;
+import is.handlers.adapters.TraktMoviesAdapter;
 import is.parsers.trakt.TraktParser;
 import is.tvpal.R;
+import is.webservices.RetrofitUtil;
+import is.webservices.TraktService;
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by Arnar on 5.12.2013.
  */
 public class TraktCommentsActivity extends BaseActivity
 {
-    public static final String EXTRA_Title = "is.activites.movieActivities.EXTRA_MOVIE";
+    public static final String EXTRA_TITLE = "is.activites.movieActivities.EXTRA_MOVIE";
     public static final String EXTRA_ImdbId = "is.activites.movieActivities.EXTRA_MOVIEID";
+    public static final String EXTRA_TYPE = "is.activites.movieActivities.EXTRA_TYPE";
 
     private ListView mListView;
     private ProgressBar mProgressBar;
     private TextView mNoResults;
     private TextView mMovieTitle;
+
+    private String mTitle;
+    private Context getContext() { return this; }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -44,41 +57,24 @@ public class TraktCommentsActivity extends BaseActivity
         mNoResults = (TextView) findViewById(R.id.noResults);
         mMovieTitle = (TextView) findViewById(R.id.comment_movieid);
 
-        Intent intent = getIntent();
-
-        String imdbId = intent.getStringExtra(DetailedMovieActivity.EXTRA_MOVIEID);
-        String title = intent.getStringExtra(DetailedMovieActivity.EXTRA_MOVIE);
-
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
-        new TraktCommentsWorker(this, title).execute(imdbId);
+        Intent intent = getIntent();
+
+        mTitle = intent.getStringExtra(EXTRA_TITLE);
+        String imdbId = intent.getStringExtra(EXTRA_ImdbId);
+        String type = intent.getStringExtra(EXTRA_TYPE);
+
+        RestAdapter restAdapter = RetrofitUtil.RetrofitRestAdapterInstance();
+        TraktService service = restAdapter.create(TraktService.class);
+
+        service.getComments(type, imdbId, commentsCallback);
     }
 
-    private class TraktCommentsWorker extends AsyncTask<String, Void, List<TraktComment>>
+    Callback<List<TraktComment>> commentsCallback = new Callback<List<TraktComment>>()
     {
-        private Context mContext;
-        private String title;
-
-        public TraktCommentsWorker(Context context, String title)
-        {
-            this.mContext = context;
-            this.title = title;
-        }
-
         @Override
-        protected List<TraktComment> doInBackground(String... urls)
-        {
-            return GetCommentsForMovie(urls[0]);
-        }
-
-        @Override
-        protected void onPreExecute()
-        {
-            mProgressBar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected void onPostExecute(List<TraktComment> comments)
+        public void success(List<TraktComment> comments, Response response)
         {
             if(comments == null || comments.size() == 0)
             {
@@ -87,21 +83,19 @@ public class TraktCommentsActivity extends BaseActivity
             }
             else
             {
-                mMovieTitle.setText(title);
-
-                mListView.setAdapter(new TraktCommentAdapter(mContext, R.layout.listview_trakt_comments, comments));
-
+                mMovieTitle.setText(mTitle);
+                mListView.setAdapter(new TraktCommentAdapter(getContext(), R.layout.listview_trakt_comments, comments));
                 mProgressBar.setVisibility(View.INVISIBLE);
             }
         }
 
-        private List<TraktComment> GetCommentsForMovie(String movie)
+        @Override
+        public void failure(RetrofitError retrofitError)
         {
-            TraktParser parser = new TraktParser();
-
-            return parser.GetCommentsForMovie(movie);
+            mProgressBar.setVisibility(View.INVISIBLE);
+            mNoResults.setVisibility(View.VISIBLE);
         }
-    }
+    };
 
     @Override
     public void onBackPressed()

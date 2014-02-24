@@ -1,7 +1,5 @@
 package is.parsers.tvdb;
 
-import android.net.Uri;
-
 import org.apache.http.protocol.HTTP;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;

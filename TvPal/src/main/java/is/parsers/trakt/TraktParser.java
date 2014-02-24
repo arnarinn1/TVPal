@@ -18,51 +18,8 @@ import is.webservices.RestClient;
  */
 public class TraktParser
 {
-    private static final String TraktEpisodeUrl = "http://api.trakt.tv/shows/trending.json/f0e3af66061e47b3243e25ed7b6443ca";
-    private static final String TraktMoviesUrl = "http://api.trakt.tv/movies/trending.json/f0e3af66061e47b3243e25ed7b6443ca";
     private static final String TraktSearchUrl = "http://api.trakt.tv/search/movies.json/f0e3af66061e47b3243e25ed7b6443ca/";
     private static final String TraktSummaryUrl = "http://api.trakt.tv/movie/summary.json/f0e3af66061e47b3243e25ed7b6443ca/";
-    private static final String TraktRelatedUrl = "http://api.trakt.tv/movie/related.json/f0e3af66061e47b3243e25ed7b6443ca/";
-
-
-
-    public List<TraktEpisodeData> GetTrendingShows()
-    {
-        try
-        {
-            RestClient http = new RestClient();
-            String json = http.Get(TraktEpisodeUrl);
-
-            Type listType = new TypeToken<ArrayList<TraktEpisodeData>>() {}.getType();
-
-            return new Gson().fromJson(json, listType);
-        }
-        catch (Exception ex)
-        {
-            Log.e(getClass().getName(), "Error downloading trending shows");
-        }
-
-        return null;
-    }
-
-    public List<TraktMovieData> GetTrendingMovies()
-    {
-        try
-        {
-            RestClient http = new RestClient();
-            String json = http.Get(TraktMoviesUrl);
-
-            Type listType = new TypeToken<ArrayList<TraktMovieData>>() {}.getType();
-
-            return new Gson().fromJson(json, listType);
-        }
-        catch (Exception ex)
-        {
-            Log.e(getClass().getName(), "Error downloading trending movies");
-        }
-
-        return null;
-    }
 
     public List<TraktMovieData> SearchMovie(String movie)
     {
@@ -95,44 +52,6 @@ public class TraktParser
         catch (Exception ex)
         {
             Log.e(getClass().getName(), "Error getting detailed movie");
-        }
-
-        return null;
-    }
-
-    public List<TraktComment> GetCommentsForMovie(String commentUrl)
-    {
-        try
-        {
-            RestClient client = new RestClient();
-            String json = client.Get(commentUrl);
-
-            Type listType = new TypeToken<ArrayList<TraktComment>>() {}.getType();
-
-            return new Gson().fromJson(json, listType);
-        }
-        catch (Exception ex)
-        {
-            Log.e(getClass().getName(), "Error searching for comments");
-        }
-
-        return null;
-    }
-
-    public List<TraktMovieDetailedData> GetReleatedMovies(String imdbId)
-    {
-        try
-        {
-            RestClient client = new RestClient();
-            String json = client.Get(TraktRelatedUrl + imdbId);
-
-            Type listType = new TypeToken<ArrayList<TraktMovieDetailedData>>() {}.getType();
-
-            return new Gson().fromJson(json, listType);
-        }
-        catch (Exception ex)
-        {
-            Log.e(getClass().getName(), "Error searching related movies");
         }
 
         return null;

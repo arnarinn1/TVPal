@@ -2,7 +2,6 @@ package is.gui.movies;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,15 +15,20 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
+
 import is.gui.base.BaseFragment;
 import is.contracts.datacontracts.trakt.TraktMovieData;
 import is.handlers.adapters.TraktMoviesAdapter;
 import is.handlers.database.DbMovies;
-import is.parsers.trakt.TraktParser;
 import is.tvpal.R;
 import is.utilities.StringUtil;
+import is.webservices.RetrofitUtil;
+import is.webservices.TraktService;
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class TrendingMoviesFragment extends BaseFragment implements AdapterView.OnItemClickListener
 {
@@ -59,7 +63,10 @@ public class TrendingMoviesFragment extends BaseFragment implements AdapterView.
 
         registerForContextMenu(mGridView);
 
-        new TrendingMoviesWorker().execute();
+        RestAdapter restAdapter = RetrofitUtil.RetrofitRestAdapterInstance();
+        TraktService service = restAdapter.create(TraktService.class);
+
+        service.getTrendingMovies(trendingMoviesCallback);
     }
 
     @Override
@@ -72,7 +79,7 @@ public class TrendingMoviesFragment extends BaseFragment implements AdapterView.
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l)
     {
         TraktMovieData data = mAdapter.getItem(position);
-        String posterUrl =StringUtil.formatTrendingPosterUrl(data.getImage().getPoster(), "-300");
+        String posterUrl = StringUtil.formatTrendingPosterUrl(data.getImage().getPoster(), "-300");
 
         Intent intent = new Intent(mContext, DetailedMovieActivity.class);
         intent.putExtra(EXTRA_MOVIEID, data.getImdbId());
@@ -117,42 +124,33 @@ public class TrendingMoviesFragment extends BaseFragment implements AdapterView.
         }
     }
 
-    private class TrendingMoviesWorker extends AsyncTask<String, Void, List<TraktMovieData>>
+    Callback<List<TraktMovieData>> trendingMoviesCallback = new Callback<List<TraktMovieData>>()
     {
         @Override
-        protected List<TraktMovieData> doInBackground(String... strings)
-        {
-            try {
-                return new TraktParser().GetTrendingMovies();
-            }
-            catch (Exception ex)
-            {
-                return new ArrayList<TraktMovieData>();
-            }
-        }
-
-        @Override
-        protected void onPreExecute()
-        {
-            mProgressBar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected void onPostExecute(List<TraktMovieData> movies)
+        public void success(List<TraktMovieData> movies, Response response)
         {
             if (movies == null)
             {
-                mNoResults.setVisibility(View.VISIBLE);
-                mProgressBar.setVisibility(View.GONE);
+                SetViewVisibility(View.GONE, View.VISIBLE);
             }
             else
             {
                 mAdapter = new TraktMoviesAdapter(mContext, R.layout.listview_trakt_movies, movies);
                 mGridView.setAdapter(mAdapter);
-
-                mProgressBar.setVisibility(View.INVISIBLE);
-                mNoResults.setVisibility(View.GONE);
+                SetViewVisibility(View.GONE, View.GONE);
             }
         }
+
+        @Override
+        public void failure(RetrofitError retrofitError)
+        {
+            SetViewVisibility(View.GONE, View.VISIBLE);
+        }
+    };
+
+    private void SetViewVisibility(int progressBarVisibility, int noResultsVisibility)
+    {
+        mProgressBar.setVisibility(progressBarVisibility);
+        mNoResults.setVisibility(noResultsVisibility);
     }
 }

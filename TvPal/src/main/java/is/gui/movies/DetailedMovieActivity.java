@@ -158,10 +158,10 @@ public class DetailedMovieActivity extends BaseActivity
                     @Override
                     public void onClick(View view)
                     {
-                        final String TraktCommentUrl = "http://api.trakt.tv/movie/comments.json/f0e3af66061e47b3243e25ed7b6443ca/";
                         Intent intent = new Intent(mContext, TraktCommentsActivity.class);
-                        intent.putExtra(TraktCommentsActivity.EXTRA_Title, movie.getTitle());
-                        intent.putExtra(TraktCommentsActivity.EXTRA_ImdbId, TraktCommentUrl + movie.getImdbId());
+                        intent.putExtra(TraktCommentsActivity.EXTRA_TITLE, movie.getTitle());
+                        intent.putExtra(TraktCommentsActivity.EXTRA_ImdbId, movie.getImdbId());
+                        intent.putExtra(TraktCommentsActivity.EXTRA_TYPE, "movie");
                         startActivity(intent);
                         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     }

@@ -72,10 +72,10 @@ public class OverviewFragment extends BaseFragment
                 @Override
                 public void onClick(View view)
                 {
-                    final String TraktCommentUrl = "http://api.trakt.tv/show/comments.json/f0e3af66061e47b3243e25ed7b6443ca/";
                     Intent intent = new Intent(mContext, TraktCommentsActivity.class);
-                    intent.putExtra(DetailedMovieActivity.EXTRA_MOVIE, mCursor.getString(Series.Name));
-                    intent.putExtra(DetailedMovieActivity.EXTRA_MOVIEID, TraktCommentUrl + mCursor.getString(Series.ImdbId));
+                    intent.putExtra(TraktCommentsActivity.EXTRA_TITLE, mCursor.getString(Series.Name));
+                    intent.putExtra(TraktCommentsActivity.EXTRA_ImdbId, mCursor.getString(Series.ImdbId));
+                    intent.putExtra(TraktCommentsActivity.EXTRA_TYPE, "show");
                     startActivity(intent);
                     getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 }

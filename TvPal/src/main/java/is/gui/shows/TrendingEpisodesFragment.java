@@ -1,7 +1,6 @@
 package is.gui.shows;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,16 +9,18 @@ import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.haarman.listviewanimations.swinginadapters.prepared.AlphaInAnimationAdapter;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import is.gui.base.BaseFragment;
 import is.contracts.datacontracts.trakt.TraktEpisodeData;
 import is.handlers.adapters.TraktEpisodeAdapter;
-import is.parsers.trakt.TraktParser;
 import is.tvpal.R;
+import is.webservices.RetrofitUtil;
+import is.webservices.TraktService;
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * A class which displays Trending Shows from Trakt Web Service
@@ -30,7 +31,7 @@ public class TrendingEpisodesFragment extends BaseFragment
 {
     private Context mContext;
     private GridView mGridView;
-    private ProgressBar mProgessBar;
+    private ProgressBar mProgressBar;
     private TextView mNoResults;
 
     public TrendingEpisodesFragment() {}
@@ -48,11 +49,14 @@ public class TrendingEpisodesFragment extends BaseFragment
     {
         super.onActivityCreated(savedInstanceState);
         mContext = activity.getContext();
-        mProgessBar = (ProgressBar) getView().findViewById(R.id.progressIndicator);
+        mProgressBar = (ProgressBar) getView().findViewById(R.id.progressIndicator);
         mNoResults = (TextView) getView().findViewById(R.id.traktNoResults);
         mGridView = (GridView) getView().findViewById(R.id.trendingTrakt);
 
-        new GetTrendingShows().execute();
+        RestAdapter restAdapter = RetrofitUtil.RetrofitRestAdapterInstance();
+        TraktService service = restAdapter.create(TraktService.class);
+
+        service.getTrendingShows(trendingShowsCallback);
     }
 
     @Override
@@ -61,44 +65,32 @@ public class TrendingEpisodesFragment extends BaseFragment
         return inflater.inflate(R.layout.fragment_trakt_trending, container, false);
     }
 
-    private class GetTrendingShows extends AsyncTask<String, Void, List<TraktEpisodeData>>
+    Callback<List<TraktEpisodeData>> trendingShowsCallback = new Callback<List<TraktEpisodeData>>()
     {
         @Override
-        protected List<TraktEpisodeData> doInBackground(String... strings)
-        {
-            try {
-                return new TraktParser().GetTrendingShows();
-            }
-            catch (Exception ex)
-            {
-                return new ArrayList<TraktEpisodeData>();
-            }
-        }
-
-        @Override
-        protected void onPreExecute()
-        {
-            mProgessBar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected void onPostExecute(List<TraktEpisodeData> shows)
+        public void success(List<TraktEpisodeData> shows, Response response)
         {
             if (shows == null)
             {
-                mProgessBar.setVisibility(View.GONE);
-                mNoResults.setVisibility(View.VISIBLE);
+                SetViewVisibility(View.GONE, View.VISIBLE);
             }
             else
             {
-                TraktEpisodeAdapter mAdapter = new TraktEpisodeAdapter(mContext, R.layout.listview_trakt_episodes, shows);
-
-                mGridView.setAdapter(mAdapter);
-
-                mProgessBar.setVisibility(View.GONE);
-                mNoResults.setVisibility(View.GONE);
+                mGridView.setAdapter(new TraktEpisodeAdapter(mContext, R.layout.listview_trakt_episodes, shows));
+                SetViewVisibility(View.GONE, View.GONE);
             }
-
         }
+
+        @Override
+        public void failure(RetrofitError retrofitError)
+        {
+            SetViewVisibility(View.GONE, View.VISIBLE);
+        }
+    };
+
+    private void SetViewVisibility(int progressBarVisibility, int noResultsVisibility)
+    {
+        mProgressBar.setVisibility(progressBarVisibility);
+        mNoResults.setVisibility(noResultsVisibility);
     }
 }
