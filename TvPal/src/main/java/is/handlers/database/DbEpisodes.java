@@ -112,7 +112,7 @@ public class DbEpisodes extends DatabaseHandler
 
     public Cursor GetCursorEpisodesDetailed(int seriesId, int seasonNumber)
     {
-        String selectQuery = String.format("select episodeId as _id, episode, episodeName, season, overview, aired, director, rating, seen, guestStars " +
+        String selectQuery = String.format("select episodeId as _id, episode, episodeName, season, overview, aired, director, rating, seen, guestStars, seriesId " +
                 "from episodes where seriesId = %d and season = %d" +
                 " order by 0+episode", seriesId, seasonNumber);
 

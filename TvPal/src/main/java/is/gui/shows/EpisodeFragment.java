@@ -16,9 +16,9 @@ import java.io.IOException;
 import is.gui.base.BaseFragment;
 import is.contracts.datacontracts.EpisodeData;
 import is.handlers.database.DbEpisodes;
-import is.parsers.tvdb.TvDbPictureParser;
 import is.tvpal.R;
 import is.utilities.ConnectionListener;
+import is.utilities.PictureTask;
 
 /**
  * A fragment that shows a detailed information for a show
@@ -30,7 +30,6 @@ public class EpisodeFragment extends BaseFragment
     public static final String EPISODE_FRAGMENT = "is.activites.showActivities.episode_fragment";
 
     private Context mContext;
-    private Bitmap bmp;
     private ImageView poster;
     private ConnectionListener _network;
     private DbEpisodes db;
@@ -94,10 +93,10 @@ public class EpisodeFragment extends BaseFragment
             poster = (ImageView) rootView.findViewById(R.id.episodePicture);
 
             //TODO: Implement better bitmap cache, perhaps save the picture on the sd card, also simplify the showing of progressbar
-            if (bmp == null && _network.isNetworkAvailable())
+            if (_network.isNetworkAvailable())
             {
-                String apiUrl = String.format("http://thetvdb.com/api/9A96DA217CEB03E7/episodes/%d", episode.getEpisodeId());
-                new DownloadPicture().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, apiUrl);
+                String imageUrl = String.format("http://thetvdb.com/banners/episodes/%s/%s.jpg", episode.getSeriesId(), episode.getEpisodeId());
+                new DownloadPicture().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, imageUrl);
             }
             else
             {
@@ -108,10 +107,10 @@ public class EpisodeFragment extends BaseFragment
         return rootView;
     }
 
-    private class DownloadPicture extends AsyncTask<String, Void, Boolean>
+    private class DownloadPicture extends AsyncTask<String, Void, Bitmap>
     {
         @Override
-        protected Boolean doInBackground(String... urls)
+        protected Bitmap doInBackground(String... urls)
         {
             try
             {
@@ -119,34 +118,32 @@ public class EpisodeFragment extends BaseFragment
             }
             catch (IOException e)
             {
-                return false;
+                return null;
             }
         }
 
         @Override
-        protected void onPostExecute(Boolean successful)
+        protected void onPostExecute(Bitmap image)
         {
-            if (successful)
+            if (image != null)
             {
-                poster.setImageBitmap(bmp);
+                poster.setImageBitmap(image);
                 if (getView() != null)
                     (getView().findViewById(R.id.progressDownloadingPicture)).setVisibility(View.INVISIBLE);
             }
         }
 
-        private Boolean GetPicture(String myurl) throws IOException
+        private Bitmap GetPicture(String myurl) throws IOException
         {
             try
             {
-                TvDbPictureParser parser = new TvDbPictureParser(myurl);
-                bmp = parser.GetEpisodePicture();
+                return PictureTask.getBitmapFromUrl(myurl);
             }
             catch (Exception ex)
             {
                 Log.e(getClass().getName(), ex.getMessage());
             }
-
-            return bmp != null;
+            return null;
         }
     }
 }

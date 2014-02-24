@@ -97,6 +97,7 @@ public class EpisodeActivity extends BaseFragmentActivity
             episode.setEpisodeId(mCursor.getInt(Episodes.EpisodeId));
             episode.setSeen(mCursor.getInt(Episodes.Seen));
             episode.setGuestStars(mCursor.getString(Episodes.GuestStars));
+            episode.setSeriesId(mCursor.getInt(Episodes.SeriesId));
 
             return EpisodeFragment.newInstance(episode);
         }
@@ -128,5 +129,6 @@ public class EpisodeActivity extends BaseFragmentActivity
         int Rating = 7;
         int Seen = 8;
         int GuestStars = 9;
+        int SeriesId = 10;
     }
 }
