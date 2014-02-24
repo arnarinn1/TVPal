@@ -1,10 +1,14 @@
 package is.parsers.tvdb;
 
+import android.net.Uri;
+
+import org.apache.http.protocol.HTTP;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
@@ -49,9 +53,11 @@ public class TvDbUpdateParser extends DefaultHandler {
     {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         SAXParser parser = factory.newSAXParser();
-        InputSource source = new InputSource(baseURL);
-        parser.parse(source
-                , this);
+
+        URL url = new URL(baseURL);
+        InputSource source = new InputSource(url.openStream());
+        source.setEncoding(HTTP.UTF_8);
+        parser.parse(source, this);
     }
 
     @Override
