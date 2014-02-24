@@ -1,6 +1,9 @@
 package is.gui.shows;
 
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Build;
@@ -18,6 +21,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import is.gui.base.BaseActivity;
+import is.gui.reminders.NotifyService;
 import is.handlers.database.DbEpisodes;
 import is.handlers.adapters.MyShowsAdapter;
 import is.thetvdb.TvDbUtil;
@@ -84,7 +88,7 @@ public class MyShowsActivity extends BaseActivity implements AdapterView.OnItemC
         switch (item.getItemId())
         {
             case R.id.removeShow:
-                RemoveShow(position);
+                RemoveShowDialog(position);
                 return true;
             case R.id.updateShow:
                 UpdateShow(position);
@@ -167,5 +171,32 @@ public class MyShowsActivity extends BaseActivity implements AdapterView.OnItemC
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.my_shows_menu, menu);
         return true;
+    }
+
+    private void RemoveShowDialog(final int position)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, 2);
+        builder
+                .setTitle("Remove Show")
+                .setMessage("Are you sure you want to remove this show ?")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        RemoveShow(position);
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        dialog.dismiss();
+                    }
+                });
+
+        AlertDialog alert = builder.show();
+        alert.show();
     }
 }
