@@ -1,36 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="fill_parent"
-    android:layout_width="fill_parent"
-    android:orientation="vertical"
-    android:background="@drawable/custom_list_selector">
+    android:layout_width="wrap_content">
 
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_height="fill_parent"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="@drawable/custom_list_selector">
 
-    <ImageView android:id="@+id/imgIcon"
-        android:layout_width="70sp"
-        android:layout_height="100sp"
-        android:scaleType="centerCrop" />
+        <ImageView android:id="@+id/imgIcon"
+            android:layout_width="70sp"
+            android:layout_height="100sp"
+            android:scaleType="centerCrop" />
 
-        <TextView android:id="@+id/title"
-        android:layout_width="0dp"
-        android:layout_weight="6"
-        android:layout_height="80dp"
-        android:layout_margin="5dp"
-        android:textSize="20sp"
-        android:gravity="center_vertical"
-        android:text="Þáttur"
-        android:textColor="#fff"
-        android:typeface="serif"/>
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView android:id="@+id/title"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:textSize="20sp"
+                android:text="Þáttur"
+                android:textColor="#fff"
+                android:typeface="serif"/>
+
+            <TextView
+                android:id="@+id/episodeGenres"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:textSize="14sp"
+                android:text="Genres"
+                android:textColor="#808080"
+                android:typeface="serif"
+                android:maxLines="2"
+                android:ellipsize="end"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 
-    <include layout="@layout/blue_splitter"/>
+    <View
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_height="1dp"
+        android:layout_width="fill_parent"
+        android:background="@color/base_color"
+        android:layout_gravity="bottom"/>
 
-</LinearLayout>
-
+</FrameLayout>

@@ -38,6 +38,7 @@ public class MyShowsAdapter extends CursorAdapter
     static class ViewHolder
     {
         TextView title;
+        TextView genres;
         ImageView thumbnail;
     }
 
@@ -61,6 +62,7 @@ public class MyShowsAdapter extends CursorAdapter
 
             viewHolder = new ViewHolder();
             viewHolder.title = (TextView) convertView.findViewById(R.id.title);
+            viewHolder.genres = (TextView) convertView.findViewById(R.id.episodeGenres);
             viewHolder.thumbnail = (ImageView) convertView.findViewById(R.id.imgIcon);
 
             convertView.setTag(viewHolder);
@@ -72,6 +74,7 @@ public class MyShowsAdapter extends CursorAdapter
 
         final int seriesId = mCursor.getInt(Series.SeriesId);
         viewHolder.title.setText(mCursor.getString(Series.Name));
+        viewHolder.genres.setText(mCursor.getString(Series.Genres));
 
         if(mPosters.get(seriesId) != null)
         {
@@ -103,5 +106,6 @@ public class MyShowsAdapter extends CursorAdapter
     {
         int SeriesId = 0;
         int Name = 1;
+        int Genres =2;
     }
 }

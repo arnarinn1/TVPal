@@ -100,7 +100,7 @@ public class DbEpisodes extends DatabaseHandler
 
     public Cursor GetCursorMyShows()
     {
-        String selectQuery = String.format("select seriesId as _id, name " +
+        String selectQuery = String.format("select seriesId as _id, name, genres " +
                 "from series order by name");
 
         SQLiteDatabase db = this.getWritableDatabase();
