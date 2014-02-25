@@ -28,6 +28,12 @@ import is.handlers.database.DbMovies;
 import is.parsers.trakt.TraktParser;
 import is.tvpal.R;
 import is.utilities.StringUtil;
+import is.webservices.RetrofitUtil;
+import is.webservices.TraktService;
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * An fragment to search for movies
@@ -42,6 +48,7 @@ public class SearchMovieFragment extends BaseFragment implements AdapterView.OnI
     private TraktMoviesAdapter mAdapter;
     private GridView mGridView;
     private ProgressBar mProgressBar;
+    private TraktService mService;
 
     public SearchMovieFragment() {}
 
@@ -64,6 +71,9 @@ public class SearchMovieFragment extends BaseFragment implements AdapterView.OnI
         mProgressBar = (ProgressBar) getView().findViewById(R.id.traktProgressIndicator);
 
         registerForContextMenu(mGridView);
+
+        RestAdapter restAdapter = RetrofitUtil.RetrofitRestAdapterInstance();
+        mService = restAdapter.create(TraktService.class);
 
         InitializeEditTextSearch();
     }
@@ -94,19 +104,10 @@ public class SearchMovieFragment extends BaseFragment implements AdapterView.OnI
 
     private void performSearch()
     {
-        String userEntry = null;
+        String userEntry = mEditSearch.getText().toString();
+        EnforceViewBehavior(null, View.VISIBLE);
 
-        try
-        {
-            userEntry = mEditSearch.getText().toString();
-            userEntry = userEntry.replace(" ", "%20"); //Delete whitespaces and insert %20 to set correct urlFormat for the API
-        }
-        catch(Exception ex)
-        {
-            Log.e(getClass().getName(), ex.getMessage());
-        }
-
-        new SearchMovieWorker().execute(userEntry);
+        mService.getSearchMovie(userEntry, searchMovieCallback);
     }
 
     @Override
@@ -159,43 +160,24 @@ public class SearchMovieFragment extends BaseFragment implements AdapterView.OnI
         startActivity(intent);
     }
 
-    private class SearchMovieWorker extends AsyncTask<String, Void, List<TraktMovieData>>
-    {
+    Callback<List<TraktMovieData>> searchMovieCallback = new Callback<List<TraktMovieData>>() {
         @Override
-        protected List<TraktMovieData> doInBackground(String... strings)
-        {
-            return searchMovie(strings[0]);
-        }
-
-        @Override
-        protected void onPreExecute()
-        {
-            mGridView.setAdapter(null);
-            mProgressBar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected void onPostExecute(List<TraktMovieData> movies)
+        public void success(List<TraktMovieData> movies, Response response)
         {
             mAdapter = new TraktMoviesAdapter(mContext, R.layout.listview_trakt_movies, movies);
-
-            mGridView.setAdapter(mAdapter);
-            mProgressBar.setVisibility(View.GONE);
+            EnforceViewBehavior(mAdapter, View.GONE);
         }
 
-        private List<TraktMovieData> searchMovie(String movie)
+        @Override
+        public void failure(RetrofitError retrofitError)
         {
-            try
-            {
-                TraktParser trakt = new TraktParser();
-
-                return trakt.SearchMovie(movie);
-            }
-            catch (Exception ex)
-            {
-                Log.e(getClass().getName(), ex.getMessage());
-            }
-            return null;
+            EnforceViewBehavior(null, View.GONE);
         }
+    };
+
+    private void EnforceViewBehavior(TraktMoviesAdapter adapter, int progressBarVisibility)
+    {
+        mGridView.setAdapter(adapter);
+        mProgressBar.setVisibility(progressBarVisibility);
     }
 }

@@ -10,9 +10,6 @@ import retrofit.Callback;
 import retrofit.http.GET;
 import retrofit.http.Path;
 
-/**
- * Created by Arnar on 24.2.2014.
- */
 public interface TraktService
 {
     @GET("/shows/trending.json/{apiKey}")
@@ -29,4 +26,12 @@ public interface TraktService
     void getComments(@Path("type") String type,
                      @Path("imdbId") String imdbId,
                      Callback<List<TraktComment>> callback);
+
+    @GET("/search/movies.json/{apiKey}/{movie}")
+    void getSearchMovie(@Path("movie") String movie,
+                        Callback<List<TraktMovieData>> callback);
+
+    @GET("/movie/summary.json/{apiKey}/{imdbId}")
+    void getMovie(@Path("imdbId") String imdbId,
+                  Callback<TraktMovieDetailedData> callback);
 }

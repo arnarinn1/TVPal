@@ -21,15 +21,19 @@ import is.gui.base.BaseActivity;
 import is.contracts.datacontracts.trakt.TraktMovieData;
 import is.contracts.datacontracts.trakt.TraktMovieDetailedData;
 import is.handlers.database.DbMovies;
-import is.parsers.trakt.TraktParser;
 import is.tvpal.R;
 import is.utilities.ExternalIntents;
 import is.utilities.PictureTask;
 import is.utilities.StringUtil;
+import is.webservices.RetrofitUtil;
+import is.webservices.TraktService;
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class DetailedMovieActivity extends BaseActivity
 {
-    public static final String EXTRA_MOVIE = "is.activites.movieActivities.EXTRA_MOVIE";
     public static final String EXTRA_MOVIEID = "is.activites.movieActivities.EXTRA_MOVIEID";
 
     private ProgressBar mProgressBar;
@@ -49,6 +53,8 @@ public class DetailedMovieActivity extends BaseActivity
     private Button mTraktCommentsActivity;
     private Button mWatchlist;
     private Button mRelatedMovies;
+
+    private Context getContext() { return this;}
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -85,32 +91,22 @@ public class DetailedMovieActivity extends BaseActivity
         String movieId = intent.getStringExtra(TrendingMoviesFragment.EXTRA_MOVIEID);
         String moviePoster = intent.getStringExtra(TrendingMoviesFragment.EXTRA_MOVIEPOSTER);
 
-        new GetMovieDetailedWorker(this).execute(movieId);
+        RestAdapter restAdapter = RetrofitUtil.RetrofitRestAdapterInstance();
+        TraktService service = restAdapter.create(TraktService.class);
+
+        service.getMovie(movieId, movieCallback);
+
         new PosterTask().execute(moviePoster);
     }
 
-    private class GetMovieDetailedWorker extends AsyncTask<String, Void, TraktMovieDetailedData>
-    {
-        private Context mContext;
-
-        private GetMovieDetailedWorker(Context context)
-        {
-            this.mContext = context;
-        }
-
+    Callback<TraktMovieDetailedData> movieCallback = new Callback<TraktMovieDetailedData>() {
         @Override
-        protected TraktMovieDetailedData doInBackground(String... strings)
-        {
-            return GetMovie(strings[0]);
-        }
-
-        @Override
-        protected void onPostExecute(final TraktMovieDetailedData movie)
+        public void success(final TraktMovieDetailedData movie, Response response)
         {
             if (movie != null)
             {
                 setTitle(movie.getTitle());
-                Animation fadeInAnimation = AnimationUtils.loadAnimation(mContext, R.anim.fade_in_layout);
+                Animation fadeInAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in_layout);
                 mLayout.startAnimation(fadeInAnimation);
                 mLayout.setVisibility(View.VISIBLE);
 
@@ -130,7 +126,7 @@ public class DetailedMovieActivity extends BaseActivity
                             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(movie.getTrailer()));
                             startActivity(intent);
                         } catch (Exception ex) {
-                            Toast.makeText(mContext, "Couldn't open trailer", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Couldn't open trailer", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -138,7 +134,7 @@ public class DetailedMovieActivity extends BaseActivity
                 mImdbIntent.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        ExternalIntents.StartIMDBIntent(mContext, movie.getImdbId());
+                        ExternalIntents.StartIMDBIntent(getContext(), movie.getImdbId());
                     }
                 });
 
@@ -149,7 +145,7 @@ public class DetailedMovieActivity extends BaseActivity
                             StartUriIntent(movie.getTraktUrl());
                         }
                         catch (Exception ex) {
-                            Toast.makeText(mContext, "Couldn't open IMDB", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Couldn't open IMDB", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -158,7 +154,7 @@ public class DetailedMovieActivity extends BaseActivity
                     @Override
                     public void onClick(View view)
                     {
-                        Intent intent = new Intent(mContext, TraktCommentsActivity.class);
+                        Intent intent = new Intent(getContext(), TraktCommentsActivity.class);
                         intent.putExtra(TraktCommentsActivity.EXTRA_TITLE, movie.getTitle());
                         intent.putExtra(TraktCommentsActivity.EXTRA_ImdbId, movie.getImdbId());
                         intent.putExtra(TraktCommentsActivity.EXTRA_TYPE, "movie");
@@ -179,14 +175,14 @@ public class DetailedMovieActivity extends BaseActivity
                             movieData.setImage(movie.getImage());
                             movieData.setOverview(movie.getOverview());
 
-                            DbMovies db = new DbMovies(mContext);
+                            DbMovies db = new DbMovies(getContext());
                             db.AddMovieToWatchList(movieData);
 
-                            Toast.makeText(mContext, String.format("Added %s to your watchlist", movie.getTitle()), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), String.format("Added %s to your watchlist", movie.getTitle()), Toast.LENGTH_SHORT).show();
                         }
                         catch (Exception ex)
                         {
-                            Log.e(mContext.getClass().getName(), "Error adding movie to watchlist");
+                            Log.e(getContext().getClass().getName(), "Error adding movie to watchlist");
                         }
                     }
                 });
@@ -194,7 +190,7 @@ public class DetailedMovieActivity extends BaseActivity
                 mRelatedMovies.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(mContext, RelatedMovieActivity.class);
+                        Intent intent = new Intent(getContext(), RelatedMovieActivity.class);
                         intent.putExtra(EXTRA_MOVIEID, movie.getImdbId());
                         startActivity(intent);
                         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
@@ -203,13 +199,12 @@ public class DetailedMovieActivity extends BaseActivity
             }
         }
 
-        public TraktMovieDetailedData GetMovie(String movieId)
+        @Override
+        public void failure(RetrofitError retrofitError)
         {
-            TraktParser parser = new TraktParser();
-
-            return parser.GetMovieDetailed(movieId);
+            //Do something ?
         }
-    }
+    };
 
     private class PosterTask extends AsyncTask<String, Void, Bitmap>
     {
