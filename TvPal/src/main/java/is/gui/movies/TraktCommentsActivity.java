@@ -10,12 +10,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import java.util.List;
 
-import is.contracts.datacontracts.trakt.TraktMovieData;
 import is.gui.base.BaseActivity;
 import is.contracts.datacontracts.trakt.TraktComment;
 import is.handlers.adapters.TraktCommentAdapter;
-import is.handlers.adapters.TraktMoviesAdapter;
-import is.parsers.trakt.TraktParser;
 import is.tvpal.R;
 import is.webservices.RetrofitUtil;
 import is.webservices.TraktService;

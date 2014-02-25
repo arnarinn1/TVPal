@@ -25,7 +25,6 @@ import is.gui.base.BaseFragment;
 import is.contracts.datacontracts.trakt.TraktMovieData;
 import is.handlers.adapters.TraktMoviesAdapter;
 import is.handlers.database.DbMovies;
-import is.parsers.trakt.TraktParser;
 import is.tvpal.R;
 import is.utilities.StringUtil;
 import is.webservices.RetrofitUtil;

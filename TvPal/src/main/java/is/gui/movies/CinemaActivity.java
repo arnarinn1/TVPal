@@ -2,7 +2,6 @@ package is.gui.movies;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -10,21 +9,29 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.haarman.listviewanimations.swinginadapters.prepared.ScaleInAnimationAdapter;
-import java.util.List;
+
+import is.contracts.datacontracts.cinema.CinemaResults;
 import is.gui.base.BaseActivity;
 import is.contracts.datacontracts.cinema.CinemaMovie;
 import is.handlers.adapters.CinemaAdapter;
-import is.parsers.cinema.CinemaParser;
 import is.tvpal.R;
+import is.webservices.ApisService;
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class CinemaActivity extends BaseActivity implements AdapterView.OnItemClickListener
 {
     public static final String EXTRA_MOVIE = "is.activites.cinemaActivities.MOVIE";
+    public static final String ApisUrl = "http://apis.is";
 
     private CinemaAdapter mAdapter;
     private ListView mListView;
     private ProgressBar mProgressBar;
     private TextView mNoResults;
+
+    private Context getContext() { return this;}
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -44,7 +51,12 @@ public class CinemaActivity extends BaseActivity implements AdapterView.OnItemCl
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
-        new MovieScedulesWorker(this).execute();
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(ApisUrl)
+                .build();
+
+        ApisService service = restAdapter.create(ApisService.class);
+        service.getMovies("cinema", cinemaCallback);
     }
 
     @Override
@@ -57,57 +69,26 @@ public class CinemaActivity extends BaseActivity implements AdapterView.OnItemCl
         startActivity(intent);
     }
 
-    /**
-     * A class which creates a new thread to Download Cinema Data
-     * @author Arnar
-     */
-    private class MovieScedulesWorker extends AsyncTask<String, Void, List<CinemaMovie>>
-    {
-        private Context mContext;
-
-        public MovieScedulesWorker(Context context)
+    Callback<CinemaResults> cinemaCallback = new Callback<CinemaResults>() {
+        @Override
+        public void success(CinemaResults movies, Response response)
         {
-            this.mContext = context;
+            mAdapter = new CinemaAdapter(getContext(), R.layout.listview_cinema_schedules, movies.getMovies());
+
+            //Animations boy
+            ScaleInAnimationAdapter scaleInAnimationAdapter = new ScaleInAnimationAdapter(mAdapter);
+            scaleInAnimationAdapter.setAbsListView(mListView);
+            mListView.setAdapter(scaleInAnimationAdapter);
+
+            mProgressBar.setVisibility(View.GONE);
+            mNoResults.setVisibility(View.GONE);
         }
 
         @Override
-        protected List<CinemaMovie> doInBackground(String... strings)
+        public void failure(RetrofitError retrofitError)
         {
-            return getMovies();
+            mNoResults.setVisibility(View.VISIBLE);
+            mProgressBar.setVisibility(View.GONE);
         }
-
-        @Override
-        protected void onPreExecute()
-        {
-            mProgressBar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected void onPostExecute(List<CinemaMovie> movies)
-        {
-            if (movies == null || movies.size() == 0)
-            {
-                mNoResults.setVisibility(View.VISIBLE);
-                mProgressBar.setVisibility(View.GONE);
-            }
-            else
-            {
-                mAdapter = new CinemaAdapter(mContext, R.layout.listview_cinema_schedules, movies);
-
-                //Animations boy
-                ScaleInAnimationAdapter scaleInAnimationAdapter = new ScaleInAnimationAdapter(mAdapter);
-                scaleInAnimationAdapter.setAbsListView(mListView);
-                mListView.setAdapter(scaleInAnimationAdapter);
-
-                mProgressBar.setVisibility(View.GONE);
-                mNoResults.setVisibility(View.GONE);
-            }
-        }
-
-        public List<CinemaMovie> getMovies()
-        {
-            CinemaParser parser = new CinemaParser();
-            return parser.GetMovieSchedules();
-        }
-    }
+    };
 }
