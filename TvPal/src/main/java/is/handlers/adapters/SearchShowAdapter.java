@@ -13,10 +13,19 @@ import android.widget.Toast;
 import java.util.List;
 
 import is.contracts.datacontracts.SeriesData;
+import is.contracts.datacontracts.tvdb.ShowData;
 import is.handlers.database.DatabaseHandler;
 import is.handlers.database.DbEpisodes;
+import is.parsers.tvdb.TvdbSeriesWorker;
 import is.thetvdb.TvDbUtil;
 import is.tvpal.R;
+import is.webservices.SimpleXMLConverter;
+import is.webservices.TvdbService;
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.ApacheClient;
+import retrofit.client.Response;
 
 /**
  * Created by Arnar on 12.10.2013.
@@ -92,11 +101,8 @@ public class SearchShowAdapter extends BaseAdapter
                 {
                     if (!seriesIds.contains(series.getSeriesId()))
                     {
-                        String tvDbUrl = String.format("http://thetvdb.com/api/%s/series/%d/all/en.xml", ApiKey, series.getSeriesId());
-                        TvDbUtil tvdb = new TvDbUtil(context);
-                        tvdb.GetEpisodesBySeason(tvDbUrl, series.getTitle());
-
                         seriesIds.add(series.getSeriesId());
+                        new TvdbSeriesWorker(context).execute(series.getSeriesId());
                     }
                     else
                         Toast.makeText(context, String.format("Series %s exists in your shows", series.getTitle()), Toast.LENGTH_SHORT).show();

@@ -119,6 +119,7 @@ public class TvDbUtil
             }
             catch (Exception ex)
             {
+                ex.printStackTrace();
                 return false;
             }
 

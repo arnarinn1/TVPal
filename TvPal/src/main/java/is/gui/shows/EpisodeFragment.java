@@ -1,24 +1,21 @@
 package is.gui.shows;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
-import java.io.IOException;
+
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
+
 import is.gui.base.BaseFragment;
 import is.contracts.datacontracts.EpisodeData;
 import is.handlers.database.DbEpisodes;
 import is.tvpal.R;
-import is.utilities.ConnectionListener;
-import is.utilities.PictureTask;
 
 /**
  * A fragment that shows a detailed information for a show
@@ -29,9 +26,7 @@ public class EpisodeFragment extends BaseFragment
 {
     public static final String EPISODE_FRAGMENT = "is.activites.showActivities.episode_fragment";
 
-    private Context mContext;
     private ImageView poster;
-    private ConnectionListener _network;
     private DbEpisodes db;
 
     public EpisodeFragment() {}
@@ -50,19 +45,18 @@ public class EpisodeFragment extends BaseFragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    public void onActivityCreated(Bundle savedInstanceState)
     {
-        mContext = activity.getContext();
-        db = new DbEpisodes(mContext);
-        _network = new ConnectionListener(mContext);
+        super.onActivityCreated(savedInstanceState);
 
-        View rootView = inflater.inflate(R.layout.activity_episode, container, false);
+        db = new DbEpisodes(activity.getContext());
+
         Bundle args = getArguments();
         final EpisodeData episode = (EpisodeData) args.getSerializable(EPISODE_FRAGMENT);
 
-        if (rootView != null)
+        if (getView() != null)
         {
-            CheckBox episodeSeenCbx = (CheckBox) rootView.findViewById(R.id.episodeSeen);
+            CheckBox episodeSeenCbx = (CheckBox) getView().findViewById(R.id.episodeSeen);
 
             episodeSeenCbx.setOnClickListener(new View.OnClickListener()
             {
@@ -83,67 +77,49 @@ public class EpisodeFragment extends BaseFragment
 
             episodeSeenCbx.setChecked(episode.getSeen() == 1);
 
-            ((TextView) rootView.findViewById(R.id.episodeTitle)).setText(episode.getEpisodeName());
-            ((TextView) rootView.findViewById(R.id.episodeAired)).setText(String.format("Aired: %s", episode.getAired()));
-            ((TextView) rootView.findViewById(R.id.episodeSeason)).setText(String.format("Season: %s", episode.getSeasonNumber()));
-            ((TextView) rootView.findViewById(R.id.episodeOverview)).setText(episode.getOverview());
-            ((TextView) rootView.findViewById(R.id.episodeDirector)).setText(episode.getDirector());
-            ((TextView) rootView.findViewById(R.id.episodeRating)).setText(episode.getRating());
-            ((TextView) rootView.findViewById(R.id.episodeGuestStars)).setText(guestStars);
-            poster = (ImageView) rootView.findViewById(R.id.episodePicture);
+            ((TextView) getView().findViewById(R.id.episodeTitle)).setText(episode.getEpisodeName());
+            ((TextView) getView().findViewById(R.id.episodeAired)).setText(String.format("Aired: %s", episode.getAired()));
+            ((TextView) getView().findViewById(R.id.episodeSeason)).setText(String.format("Season: %s", episode.getSeasonNumber()));
+            ((TextView) getView().findViewById(R.id.episodeOverview)).setText(episode.getOverview());
+            ((TextView) getView().findViewById(R.id.episodeDirector)).setText(episode.getDirector());
+            ((TextView) getView().findViewById(R.id.episodeRating)).setText(episode.getRating());
+            ((TextView) getView().findViewById(R.id.episodeGuestStars)).setText(guestStars);
+            poster = (ImageView) getView().findViewById(R.id.episodePicture);
 
-            //TODO: Implement better bitmap cache, perhaps save the picture on the sd card, also simplify the showing of progressbar
-            if (_network.isNetworkAvailable())
-            {
-                String imageUrl = String.format("http://thetvdb.com/banners/episodes/%s/%s.jpg", episode.getSeriesId(), episode.getEpisodeId());
-                new DownloadPicture().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, imageUrl);
-            }
-            else
-            {
-                rootView.findViewById(R.id.progressDownloadingPicture).setVisibility(View.INVISIBLE);
-            }
+            String imageUrl = String.format("http://thetvdb.com/banners/episodes/%s/%s.jpg", episode.getSeriesId(), episode.getEpisodeId());
+
+            Picasso.with(activity.getContext())
+                    .load(imageUrl)
+                    .skipMemoryCache()
+                    .placeholder(R.drawable.default_episode_background)
+                    .into(poster, imageCallback);
         }
-
-        return rootView;
     }
 
-    private class DownloadPicture extends AsyncTask<String, Void, Bitmap>
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
+        return inflater.inflate(R.layout.activity_episode, container, false);
+    }
+
+    private Callback imageCallback = new Callback()
     {
         @Override
-        protected Bitmap doInBackground(String... urls)
+        public void onSuccess()
         {
-            try
-            {
-                return GetPicture(urls[0]);
-            }
-            catch (IOException e)
-            {
-                return null;
-            }
+            SetProgressBarVisibility();
         }
 
         @Override
-        protected void onPostExecute(Bitmap image)
+        public void onError()
         {
-            if (image != null)
-            {
-                poster.setImageBitmap(image);
-                if (getView() != null)
-                    (getView().findViewById(R.id.progressDownloadingPicture)).setVisibility(View.INVISIBLE);
-            }
+            SetProgressBarVisibility();
         }
+    };
 
-        private Bitmap GetPicture(String myurl) throws IOException
-        {
-            try
-            {
-                return PictureTask.getBitmapFromUrl(myurl);
-            }
-            catch (Exception ex)
-            {
-                Log.e(getClass().getName(), ex.getMessage());
-            }
-            return null;
-        }
+    private void SetProgressBarVisibility()
+    {
+        if (getView() != null)
+            (getView().findViewById(R.id.progressDownloadingPicture)).setVisibility(View.INVISIBLE);
     }
 }
