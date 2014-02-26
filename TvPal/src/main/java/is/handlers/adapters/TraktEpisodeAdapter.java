@@ -22,6 +22,7 @@ import java.util.List;
 import is.contracts.datacontracts.trakt.TraktEpisodeData;
 import is.handlers.database.DatabaseHandler;
 import is.handlers.database.DbEpisodes;
+import is.parsers.tvdb.TvdbSeriesWorker;
 import is.thetvdb.TvDbUtil;
 import is.tvpal.R;
 import is.utilities.PictureTask;
@@ -105,13 +106,10 @@ public class TraktEpisodeAdapter extends BaseAdapter
                 {
                     if (!seriesIds.contains(show.getSeriesId()))
                     {
-                        String tvDbUrl = String.format("http://thetvdb.com/api/%s/series/%d/all/en.xml", ApiKey, show.getSeriesId());
-                        TvDbUtil tvdb = new TvDbUtil(mContext);
-                        tvdb.GetEpisodesBySeason(tvDbUrl, show.getTitle());
-
                         seriesIds.add(show.getSeriesId());
+                        new TvdbSeriesWorker(mContext, show.getTitle()).execute(show.getSeriesId());
                     }
-                    else //This should never happen
+                    else
                         Toast.makeText(mContext, String.format("Series %s exists in your shows", show.getTitle()), Toast.LENGTH_SHORT).show();
                 }
                 holder.addShow.setVisibility(View.INVISIBLE);

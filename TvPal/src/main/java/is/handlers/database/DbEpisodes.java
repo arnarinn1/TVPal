@@ -14,6 +14,8 @@ import java.util.List;
 import is.contracts.datacontracts.EpisodeData;
 import is.contracts.datacontracts.SeriesData;
 import is.contracts.datacontracts.StatisticData;
+import is.contracts.datacontracts.tvdb.Episode;
+import is.contracts.datacontracts.tvdb.Series;
 import is.utilities.DateUtil;
 
 /**
@@ -127,7 +129,7 @@ public class DbEpisodes extends DatabaseHandler
         Insert/Update/Remove data
     */
 
-    public void InsertFullSeriesInfo(List<EpisodeData> episodes, SeriesData series)
+    public void InsertFullSeriesInfo(List<Episode> episodes, Series series)
     {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -139,7 +141,7 @@ public class DbEpisodes extends DatabaseHandler
             {
                 AddSeries(series, db);
 
-                for (EpisodeData e : episodes)
+                for (Episode e : episodes)
                     AddEpisode(db, e);
 
                 db.setTransactionSuccessful();
@@ -156,20 +158,20 @@ public class DbEpisodes extends DatabaseHandler
         }
     }
 
-    public void AddSeries(SeriesData series, SQLiteDatabase db)
+    public void AddSeries(Series series, SQLiteDatabase db)
     {
         try
         {
             ContentValues values = new ContentValues();
-            values.put(KEY_S_SERIESID, series.getSeriesId());
-            values.put(KEY_S_NAME, series.getTitle());
+            values.put(KEY_S_SERIESID, series.getId());
+            values.put(KEY_S_NAME, series.getSeriesName());
             values.put(KEY_S_NETWORK, series.getNetwork());
             values.put(KEY_S_OVERVIEW, series.getOverview());
-            values.put(KEY_S_THUMBNAIL, series.getPosterStream());
+            values.put(KEY_S_THUMBNAIL, series.getPosterByteStream());
             values.put(KEY_S_LASTUPDATED, series.getLastUpdated());
-            values.put(KEY_S_GENRES, series.getGenres());
+            values.put(KEY_S_GENRES, series.getGenre());
             values.put(KEY_S_ACTORS, series.getActors());
-            values.put(KEY_S_IMDBID, series.getImdbid());
+            values.put(KEY_S_IMDBID, series.getImdbId());
 
             db.insert(TABLE_SERIES, null, values);
         }
@@ -179,17 +181,17 @@ public class DbEpisodes extends DatabaseHandler
         }
     }
 
-    public void AddEpisode(SQLiteDatabase db, EpisodeData episode)
+    public void AddEpisode(SQLiteDatabase db, Episode episode)
     {
         try
         {
             ContentValues values = new ContentValues();
-            values.put(KEY_E_EPISODEID, episode.getEpisodeId());
+            values.put(KEY_E_EPISODEID, episode.getId());
             values.put(KEY_S_SERIESID, episode.getSeriesId());
             values.put(KEY_E_SEASON, episode.getSeasonNumber());
             values.put(KEY_E_EPISODE, episode.getEpisodeNumber());
             values.put(KEY_E_EPISODENAME, episode.getEpisodeName());
-            values.put(KEY_E_AIRED, episode.getAired());
+            values.put(KEY_E_AIRED, episode.getFirstAired());
             values.put(KEY_S_OVERVIEW, episode.getOverview());
             values.put(KEY_E_SEEN, 0);
             values.put(KEY_E_DIRECTOR, episode.getDirector());
@@ -222,7 +224,7 @@ public class DbEpisodes extends DatabaseHandler
             for (EpisodeData e : episodes)
             {
                 if (!DoesEpisodeExist(db, e.getEpisodeId())) {
-                    AddEpisode(db, e);
+                    //AddEpisode(db, e);
                     Log.d(getClass().getName(), "Updating episode: " + e.getEpisodeName());
                 }
                 else {

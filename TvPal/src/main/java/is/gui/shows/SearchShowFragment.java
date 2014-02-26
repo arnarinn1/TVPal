@@ -1,10 +1,8 @@
 package is.gui.shows;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,13 +14,17 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import java.io.IOException;
-import java.util.List;
+
+import is.contracts.datacontracts.tvdb.SeriesSearch;
 import is.gui.base.BaseFragment;
-import is.contracts.datacontracts.SeriesData;
 import is.handlers.adapters.SearchShowAdapter;
-import is.parsers.tvdb.TvDbShowParser;
 import is.tvpal.R;
+import is.webservices.RetrofitUtil;
+import is.webservices.TvdbService;
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * An activity to search for episodes and add them to "MyShows"
@@ -36,6 +38,8 @@ public class SearchShowFragment extends BaseFragment
     private EditText mEditSearch;
     private Context mContext;
     private ProgressBar mProgressBar;
+
+    private TvdbService mService;
 
     public SearchShowFragment() {}
 
@@ -56,6 +60,9 @@ public class SearchShowFragment extends BaseFragment
         mEditSearch = (EditText) getView().findViewById(R.id.searchShow);
         mProgressBar = (ProgressBar) getView().findViewById(R.id.progressIndicator);
         mListView = (ListView) getView().findViewById(R.id.lvId);
+
+        RestAdapter restAdapter = RetrofitUtil.RestAdapterXMLInstance();
+        mService = restAdapter.create(TvdbService.class);
 
         InitializeEditTextSearch();
     }
@@ -86,81 +93,32 @@ public class SearchShowFragment extends BaseFragment
 
     private void performSearch()
     {
-        String userEntry = null;
+        mProgressBar.setVisibility(View.VISIBLE);
+        mListView.setAdapter(null);
 
-        try
-        {
-            userEntry = mEditSearch.getText().toString();
-            userEntry = userEntry.replace(" ", "%20"); //Delete whitespaces and insert %20 to set correct urlFormat for the API
-        }
-        catch(Exception ex)
-        {
-            Log.e(getClass().getName(), ex.getMessage());
-        }
-
-        String searchUrl = String.format("%s%s", getResources().getString(R.string.tvdbBaseUrl), userEntry);
-
-        new DownloadShows(mContext).execute(searchUrl);
+        String userEntry = mEditSearch.getText().toString();
+        mService.getSearchSeries(userEntry, searchSeriesCallback);
     }
 
-    private class DownloadShows extends AsyncTask<String, Void, List<SeriesData>>
-    {
-        private Context ctx;
-
-        public DownloadShows(Context context)
-        {
-            this.ctx = context;
-        }
-
+    Callback<SeriesSearch> searchSeriesCallback = new Callback<SeriesSearch>() {
         @Override
-        protected List<SeriesData> doInBackground(String... urls)
+        public void success(SeriesSearch series, Response response)
         {
-            try
-            {
-                return GetShows(urls[0]);
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPreExecute()
-        {
-            mProgressBar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected void onPostExecute(List<SeriesData> shows)
-        {
-            if (shows == null)
-            {
-                Toast.makeText(ctx, "No shows found", Toast.LENGTH_SHORT).show();
-            }
+            if (series.getSeries() == null)
+                Toast.makeText(mContext, "Found no shows", Toast.LENGTH_SHORT).show();
             else
             {
-                SearchShowAdapter mAdapter = new SearchShowAdapter(ctx, R.layout.listview_search_show, shows);
+                SearchShowAdapter mAdapter = new SearchShowAdapter(mContext, R.layout.listview_search_show, series.getSeries());
                 mListView.setAdapter(mAdapter);
             }
 
             mProgressBar.setVisibility(View.INVISIBLE);
         }
 
-        private List<SeriesData> GetShows(String myurl) throws IOException
+        @Override
+        public void failure(RetrofitError retrofitError)
         {
-            try
-            {
-                TvDbShowParser parser = new TvDbShowParser(myurl);
-                return parser.GetShows();
-            }
-            catch (Exception ex)
-            {
-                Log.e(getClass().getName(), ex.getMessage());
-            }
-
-            return null;
+            mProgressBar.setVisibility(View.INVISIBLE);
         }
-    }
+    };
 }

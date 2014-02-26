@@ -13,6 +13,7 @@ import android.widget.Toast;
 import java.util.List;
 
 import is.contracts.datacontracts.SeriesData;
+import is.contracts.datacontracts.tvdb.SeriesMinimal;
 import is.contracts.datacontracts.tvdb.ShowData;
 import is.handlers.database.DatabaseHandler;
 import is.handlers.database.DbEpisodes;
@@ -37,14 +38,12 @@ import retrofit.client.Response;
 
 public class SearchShowAdapter extends BaseAdapter
 {
-    public static final String ApiKey = "9A96DA217CEB03E7";
-
     private Context context;
     private int layoutResourceId;
-    private List<SeriesData> shows;
+    private List<SeriesMinimal> shows;
     private List<Integer> seriesIds;
 
-    public SearchShowAdapter(Context context, int layoutResourceId, List<SeriesData> shows)
+    public SearchShowAdapter(Context context, int layoutResourceId, List<SeriesMinimal> shows)
     {
         this.context = context;
         this.layoutResourceId = layoutResourceId;
@@ -83,14 +82,14 @@ public class SearchShowAdapter extends BaseAdapter
             holder = (ShowHolder)row.getTag();
         }
 
-        final SeriesData series = getItem(position);
+        final SeriesMinimal series = getItem(position);
 
-        holder.title.setText(series.getTitle());
+        holder.title.setText(series.getSeriesName());
 
         holder.overview.setText(series.getOverview());
 
         holder.checkShow.setChecked(false);
-        holder.checkShow.setVisibility(seriesIds.contains(series.getSeriesId()) ? View.INVISIBLE : View.VISIBLE);
+        holder.checkShow.setVisibility(seriesIds.contains(series.getId()) ? View.INVISIBLE : View.VISIBLE);
 
         holder.checkShow.setOnClickListener(new View.OnClickListener()
         {
@@ -99,13 +98,13 @@ public class SearchShowAdapter extends BaseAdapter
             {
                 if (((CheckBox) view).isChecked())
                 {
-                    if (!seriesIds.contains(series.getSeriesId()))
+                    if (!seriesIds.contains(series.getId()))
                     {
-                        seriesIds.add(series.getSeriesId());
-                        new TvdbSeriesWorker(context).execute(series.getSeriesId());
+                        seriesIds.add(series.getId());
+                        new TvdbSeriesWorker(context, series.getSeriesName()).execute(series.getId());
                     }
                     else
-                        Toast.makeText(context, String.format("Series %s exists in your shows", series.getTitle()), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, String.format("Series %s exists in your shows", series.getSeriesName()), Toast.LENGTH_SHORT).show();
                 }
                 holder.checkShow.setVisibility(View.INVISIBLE);
             }
@@ -121,7 +120,7 @@ public class SearchShowAdapter extends BaseAdapter
     }
 
     @Override
-    public SeriesData getItem(int position)
+    public SeriesMinimal getItem(int position)
     {
         return shows.get(position);
     }

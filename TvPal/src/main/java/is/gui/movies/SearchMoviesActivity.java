@@ -80,7 +80,7 @@ public class SearchMoviesActivity extends BaseFragmentActivity
         @Override
         public CharSequence getPageTitle(int position)
         {
-            return position == 0 ? "Search" : "Trending";
+            return position == 0 ? "SeriesSearch" : "Trending";
         }
     }
 }

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-import is.contracts.datacontracts.tvdb.Series;
 import is.contracts.datacontracts.tvdb.ShowData;
 import is.handlers.database.DbEpisodes;
 import is.utilities.PictureTask;
@@ -15,10 +14,12 @@ import retrofit.RestAdapter;
 public class TvdbSeriesWorker extends AsyncTask<Integer, Void, Boolean>
 {
     private Context mContext;
+    private String mSeriesTitle;
 
-    public TvdbSeriesWorker(Context context)
+    public TvdbSeriesWorker(Context context, String title)
     {
         this.mContext = context;
+        this.mSeriesTitle = title;
     }
 
     @Override
@@ -56,18 +57,25 @@ public class TvdbSeriesWorker extends AsyncTask<Integer, Void, Boolean>
             return false;
         }
 
-        //new DbEpisodes(mContext).InsertFullSeriesInfo(series.getEpisodes(), series.getSeries());
+        //TODO: Refactor InsertFullSeriesInfo to throw exceptions not catch them
+        new DbEpisodes(mContext).InsertFullSeriesInfo(series.getEpisodes(), series.getSeries());
 
         return true;
+    }
+
+    @Override
+    protected void onPreExecute()
+    {
+        Toast.makeText(mContext, String.format("%s will be added to your shows", mSeriesTitle),Toast.LENGTH_SHORT).show();
     }
 
     @Override
     protected void onPostExecute(Boolean successful)
     {
         if (successful)
-            Toast.makeText(mContext, "Success", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, String.format("Added %s to your shows", mSeriesTitle), Toast.LENGTH_SHORT).show();
         else
-            Toast.makeText(mContext, "Failure", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "Whoops, Something went wrong", Toast.LENGTH_SHORT).show();
     }
 }
 

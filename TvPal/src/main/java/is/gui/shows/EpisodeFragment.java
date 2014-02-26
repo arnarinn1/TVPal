@@ -73,7 +73,7 @@ public class EpisodeFragment extends BaseFragment
                 }
             });
 
-            final String guestStars = episode.getGuestStars().equals("") ? "No Guest Stars" : episode.getGuestStars();
+            final String guestStars = episode.getGuestStars() == null ? "No Guest Stars" : episode.getGuestStars();
 
             episodeSeenCbx.setChecked(episode.getSeen() == 1);
 

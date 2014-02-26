@@ -3,6 +3,8 @@ package is.contracts.datacontracts.tvdb;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
+import is.utilities.StringUtil;
+
 @Root(name = "Episode", strict = false)
 public class Episode
 {
@@ -48,7 +50,7 @@ public class Episode
     public String getOverview() { return overview; }
     public String getRating() { return rating; }
     public String getDirector() {return director; }
-    public String getGuestStars() { return guestStars; }
+    public String getGuestStars() { return guestStars == null ? null : StringUtil.ArrayToString(guestStars); }
     public String getImage() {return image; }
 
     @Override

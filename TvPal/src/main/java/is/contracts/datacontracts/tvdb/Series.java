@@ -3,6 +3,8 @@ package is.contracts.datacontracts.tvdb;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
+import is.utilities.StringUtil;
+
 @Root(name = "Series", strict = false)
 public class Series
 {
@@ -36,7 +38,7 @@ public class Series
     private byte[] posterByteStream;
 
     public int getId() { return id; }
-    public String getActors() { return actors; }
+    public String getActors() { return StringUtil.ArrayToString(actors); }
     public String getSeriesName() { return seriesName; }
     public String getOverview() { return overview; }
     public String getNetwork() { return network;}
