@@ -7,13 +7,9 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import java.io.IOException;
-import java.net.PortUnreachableException;
 import java.util.List;
 import is.contracts.datacontracts.EpisodeData;
-import is.contracts.datacontracts.SeriesData;
-import is.handlers.database.DatabaseHandler;
 import is.handlers.database.DbEpisodes;
-import is.parsers.tvdb.TvDbEpisodeParser;
 import is.parsers.tvdb.TvDbUpdateParser;
 import is.utilities.ConnectionListener;
 
