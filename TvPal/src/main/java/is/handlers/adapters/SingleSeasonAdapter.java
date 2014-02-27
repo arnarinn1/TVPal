@@ -65,28 +65,28 @@ public class SingleSeasonAdapter extends CursorAdapter {
             throw new IllegalStateException("Failed to move cursor to position  " + position);
         }
 
-        final ViewHolder viewHolder;
+        final ViewHolder holder;
 
         if (convertView == null)
         {
             convertView = newView(mContext, mCursor, parent);
 
-            viewHolder = new ViewHolder();
-            viewHolder.numberOfEpisode = (TextView) convertView.findViewById(R.id.numberOfEpisode);
-            viewHolder.name = (TextView) convertView.findViewById(R.id.episodeName);
-            viewHolder.aired = (TextView) convertView.findViewById(R.id.aired);
-            viewHolder.checkShowSeen = (CheckBox) convertView.findViewById(R.id.setEpisodeSeen);
+            holder = new ViewHolder();
+            holder.numberOfEpisode = (TextView) convertView.findViewById(R.id.numberOfEpisode);
+            holder.name = (TextView) convertView.findViewById(R.id.episodeName);
+            holder.aired = (TextView) convertView.findViewById(R.id.aired);
+            holder.checkShowSeen = (CheckBox) convertView.findViewById(R.id.setEpisodeSeen);
 
-            convertView.setTag(viewHolder);
+            convertView.setTag(holder);
         }
         else
         {
-            viewHolder = (ViewHolder) convertView.getTag();
+            holder = (ViewHolder) convertView.getTag();
         }
 
         final int episodeId = mCursor.getInt(Episodes.EpisodeId);
 
-        viewHolder.checkShowSeen.setOnClickListener(new View.OnClickListener() {
+        holder.checkShowSeen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view)
             {
@@ -105,11 +105,13 @@ public class SingleSeasonAdapter extends CursorAdapter {
             mCheckedShows.set(position, false);
         }
 
-        viewHolder.checkShowSeen.setChecked(mCheckedShows.get(position));
+        holder.checkShowSeen.setChecked(mCheckedShows.get(position));
 
-        viewHolder.numberOfEpisode.setText(String.format("%d:", mCursor.getInt(Episodes.Episode)));
-        viewHolder.name.setText(mCursor.getString(Episodes.EpisodeName));
-        viewHolder.aired.setText(DateUtil.FormatDateEpisode(mCursor.getString(Episodes.Aired)));
+        holder.numberOfEpisode.setText(String.format("%d:", mCursor.getInt(Episodes.Episode)));
+        holder.name.setText(mCursor.getString(Episodes.EpisodeName));
+
+        final String airDate = mCursor.getString(Episodes.Aired);
+        holder.aired.setText(airDate == null ? "TBA" : DateUtil.FormatDateEpisode(airDate));
 
         return convertView;
     }

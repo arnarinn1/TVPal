@@ -43,7 +43,7 @@ public class Series
     public String getOverview() { return overview; }
     public String getNetwork() { return network;}
     public int getLastUpdated() { return lastUpdated; }
-    public String getGenre() { return genre; }
+    public String getGenre() { return StringUtil.ArrayToString(genre); }
     public String getImdbId() { return imdbId; }
     public String getPoster() { return poster; }
 

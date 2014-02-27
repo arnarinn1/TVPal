@@ -1,9 +1,6 @@
 package is.gui.shows;
 
 import android.annotation.TargetApi;
-import android.app.AlertDialog;
-import android.app.DialogFragment;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Build;
@@ -21,7 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import is.gui.base.BaseActivity;
-import is.gui.reminders.NotifyService;
+import is.gui.dialogs.RemoveShowDialog;
 import is.handlers.database.DbEpisodes;
 import is.handlers.adapters.MyShowsAdapter;
 import is.thetvdb.TvDbUtil;
@@ -32,7 +29,7 @@ import is.tvpal.R;
  * @author Arnar
  */
 
-public class MyShowsActivity extends BaseActivity implements AdapterView.OnItemClickListener
+public class MyShowsActivity extends BaseActivity implements AdapterView.OnItemClickListener, RemoveShowDialog.OnRemoveShowListener
 {
     public static final String EXTRA_SERIESID = "is.activities.showActivities.SERIESID";
     public static final String EXTRA_NAME = "is.actvities.showActivities.SERIESNAME";
@@ -85,10 +82,12 @@ public class MyShowsActivity extends BaseActivity implements AdapterView.OnItemC
         AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
         int position = info.position;
 
+        Cursor show = (Cursor) mAdapter.getItem(position);
+
         switch (item.getItemId())
         {
             case R.id.removeShow:
-                RemoveShowDialog(position);
+                RemoveShowDialog(position, show.getString(1));
                 return true;
             case R.id.updateShow:
                 UpdateShow(position);
@@ -173,30 +172,15 @@ public class MyShowsActivity extends BaseActivity implements AdapterView.OnItemC
         return true;
     }
 
-    private void RemoveShowDialog(final int position)
+    private void RemoveShowDialog(int position, String seriesTitle)
     {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, 2);
-        builder
-                .setTitle("Remove Show")
-                .setMessage("Are you sure you want to remove this show ?")
-                .setPositiveButton("OK", new DialogInterface.OnClickListener()
-                {
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        RemoveShow(position);
-                        dialog.dismiss();
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        dialog.dismiss();
-                    }
-                });
+        RemoveShowDialog removeShowDialog = RemoveShowDialog.newInstance(position, seriesTitle);
+        removeShowDialog.show(getFragmentManager(), "tag_removeshow"); //TODO: Look into this tag thingy
+    }
 
-        AlertDialog alert = builder.show();
-        alert.show();
+    @Override
+    public void onRemoveShow(int position)
+    {
+        RemoveShow(position);
     }
 }
