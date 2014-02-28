@@ -1,5 +1,6 @@
 package is.gui.movies;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -85,6 +86,7 @@ public class TrendingMoviesFragment extends BaseFragment implements AdapterView.
         intent.putExtra(EXTRA_MOVIEID, data.getImdbId());
         intent.putExtra(EXTRA_MOVIEPOSTER, posterUrl);
         startActivity(intent);
+        ((Activity)mContext).overridePendingTransition(R.anim.fade_in_activity, R.anim.fade_out_activity);
     }
 
     @Override

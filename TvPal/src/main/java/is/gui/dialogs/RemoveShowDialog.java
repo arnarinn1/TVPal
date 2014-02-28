@@ -9,7 +9,7 @@ import android.os.Bundle;
 
 public class RemoveShowDialog extends DialogFragment
 {
-    public static final String EXTRA_POSITION = "is.gui.dialogs.POSITION";
+    public static final String EXTRA_SERIESID = "is.gui.dialogs.POSITION";
     public static final String EXTRA_TITLE = "is.gui.dialogs.TITLE";
     public static final int HOLO_DARK_THEME = 2;
 
@@ -17,7 +17,7 @@ public class RemoveShowDialog extends DialogFragment
     {
         RemoveShowDialog f = new RemoveShowDialog();
         Bundle args = new Bundle();
-        args.putInt(EXTRA_POSITION, position);
+        args.putInt(EXTRA_SERIESID, position);
         args.putString(EXTRA_TITLE, seriesTitle);
         f.setArguments(args);
         return f;
@@ -42,18 +42,18 @@ public class RemoveShowDialog extends DialogFragment
     public Dialog onCreateDialog(Bundle savedInstanceState)
     {
         Bundle args = getArguments();
-        final int position = args.getInt(EXTRA_TITLE);
+        final int position = args.getInt(EXTRA_SERIESID);
         final String seriesTitle = args.getString(EXTRA_TITLE);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), HOLO_DARK_THEME);
         builder
-                .setMessage(String.format("Are you sure you want to remove %s from your shows ?", seriesTitle))
+                .setMessage(String.format("Remove %s from your shows ?", seriesTitle))
                 .setTitle("Remove Show")
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
                 {
                     public void onClick(DialogInterface dialog, int id)
                     {
-                        mListener.onRemoveShow(position);
+                        mListener.onRemoveShow(position, seriesTitle);
                         dismiss();
                     }
                 })
@@ -70,6 +70,6 @@ public class RemoveShowDialog extends DialogFragment
 
     public interface OnRemoveShowListener
     {
-        public void onRemoveShow(int position);
+        public void onRemoveShow(int seriesId, String seriesTitle);
     }
 }

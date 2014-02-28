@@ -3,6 +3,8 @@ package is.gui.base;
 import android.app.Activity;
 import android.view.MenuItem;
 
+import is.tvpal.R;
+
 /**
  * Created by Arnar on 21.11.2013.
  */

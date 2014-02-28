@@ -78,5 +78,6 @@ public class SingleSeasonActivity extends BaseActivity implements AdapterView.On
         intent.putExtra(EXTRA_EPISODENR, selectedEpisode.getInt(3));
         intent.putExtra(EXTRA_SELECTED, position);
         startActivity(intent);
+        overridePendingTransition(R.anim.fade_in_activity, R.anim.fade_out_activity);
     }
 }

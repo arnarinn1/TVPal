@@ -87,7 +87,7 @@ public class MyShowsActivity extends BaseActivity implements AdapterView.OnItemC
         switch (item.getItemId())
         {
             case R.id.removeShow:
-                RemoveShowDialog(position, show.getString(1));
+                RemoveShowDialog(show.getInt(0), show.getString(1));
                 return true;
             case R.id.updateShow:
                 UpdateShow(position);
@@ -100,15 +100,13 @@ public class MyShowsActivity extends BaseActivity implements AdapterView.OnItemC
         }
     }
 
-    private void RemoveShow(int selectedShow)
+    private void RemoveShow(int selectedShow, String seriesTitle)
     {
-        Cursor show = (Cursor) mAdapter.getItem(selectedShow);
-
         try
         {
-            mDB.RemoveShow(show.getInt(0));
+            mDB.RemoveShow(selectedShow);
             SetListAdapterMyShows();
-            Toast.makeText(this, String.format("Removed %s from your shows", show.getString(1)), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, String.format("Removed %s from your shows", seriesTitle), Toast.LENGTH_SHORT).show();
         }
         catch (Exception ex)
         {
@@ -140,6 +138,7 @@ public class MyShowsActivity extends BaseActivity implements AdapterView.OnItemC
         intent.putExtra(EXTRA_SERIESID, show.getInt(0));
         intent.putExtra(EXTRA_NAME, show.getString(1));
         startActivity(intent);
+        overridePendingTransition(R.anim.fade_in_activity, R.anim.fade_out_activity);
     }
 
     @Override
@@ -179,8 +178,8 @@ public class MyShowsActivity extends BaseActivity implements AdapterView.OnItemC
     }
 
     @Override
-    public void onRemoveShow(int position)
+    public void onRemoveShow(int seriesId, String seriesTitle)
     {
-        RemoveShow(position);
+        RemoveShow(seriesId, seriesTitle);
     }
 }

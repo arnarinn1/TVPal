@@ -1,5 +1,6 @@
 package is.gui.shows;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -93,6 +94,7 @@ public class SeasonFragment extends BaseFragment implements AdapterView.OnItemCl
         intent.putExtra(EXTRA_SERIESID, mSeriesId);
         intent.putExtra(EXTRA_SEASON, selectedSeason.getInt(0));
         startActivity(intent);
+        ((Activity)mContext).overridePendingTransition(R.anim.fade_in_activity, R.anim.fade_out_activity);
     }
 
     @Override
