@@ -41,8 +41,7 @@
         android:layout_alignParentRight="true"
         app:shadowDrawable="@drawable/sidebar_shadow"
         app:shadowWidth="6dp"
-        app:stickTo="right"
-        app:closeOnTapEnabled="false">
+        app:stickTo="right">
 
         <include
             layout="@layout/activity_detailed_event"/>

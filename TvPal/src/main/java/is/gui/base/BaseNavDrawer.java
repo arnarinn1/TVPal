@@ -203,15 +203,8 @@ public class BaseNavDrawer extends Activity
             mDrawerList.setItemChecked(position, true);
             mDrawerLayout.closeDrawer(mDrawerList);
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-            {
-                ActivityOptions activityTransition = ActivityOptions.makeScaleUpAnimation(view, 0, 0, view.getWidth(), view.getHeight());
-                startActivity(intent, activityTransition.toBundle());
-            }
-            else
-            {
-                startActivity(intent);
-            }
+            startActivity(intent);
+            overridePendingTransition(R.anim.fade_in_activity, R.anim.fade_out_activity);
         }
         catch (Exception ex)
         {

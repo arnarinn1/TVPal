@@ -30,6 +30,8 @@ public class WatchlistActivity extends BaseFragmentActivity implements AdapterVi
     private TextView mWatchlistDesc;
     private Button mCloseButton;
 
+    private DbMovies mDb;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -47,7 +49,9 @@ public class WatchlistActivity extends BaseFragmentActivity implements AdapterVi
         AttachEventListeners();
 
         registerForContextMenu(mGridView);
-        SetAdapter();
+        mDb = new DbMovies(this);
+        mAdapter = new WatchListAdapter(this, mDb.GetWatchlistCursor(), 0);
+        mGridView.setAdapter(mAdapter);
     }
 
     @Override
@@ -78,14 +82,13 @@ public class WatchlistActivity extends BaseFragmentActivity implements AdapterVi
     {
         Cursor movie = (Cursor) mAdapter.getItem(position);
         new DbMovies(this).RemoveMovieFromWatchList(movie.getString(0));
-        SetAdapter();
+        UpdateCursor();
     }
 
-    private void SetAdapter()
+    private void UpdateCursor()
     {
-        DbMovies db = new DbMovies(this);
-        mAdapter = new WatchListAdapter(this, db.GetWatchlistCursor(), 0);
-        mGridView.setAdapter(mAdapter);
+        mAdapter.swapCursor(mDb.GetWatchlistCursor());
+        mAdapter.notifyDataSetChanged();;
     }
 
     @Override

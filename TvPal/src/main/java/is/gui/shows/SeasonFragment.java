@@ -52,13 +52,13 @@ public class SeasonFragment extends BaseFragment implements AdapterView.OnItemCl
     public void onResume()
     {
         super.onResume();
-        SetListAdapter();
+        UpdateCursor();
     }
 
-    private void SetListAdapter()
+    private void UpdateCursor()
     {
-        mAdapter= new SeasonAdapter(mContext, db.GetCursorSeasons(mSeriesId), 0);
-        listView.setAdapter(mAdapter);
+        mAdapter.swapCursor(db.GetCursorSeasons(mSeriesId));
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -126,6 +126,7 @@ public class SeasonFragment extends BaseFragment implements AdapterView.OnItemCl
     {
         Cursor selectedSeason = (Cursor) mAdapter.getItem(position);
         db.UpdateSeasonSeenStatus(selectedSeason.getInt(1), selectedSeason.getInt(0), seenStatus);
-        SetListAdapter();
+
+        UpdateCursor();
     }
 }

@@ -46,8 +46,8 @@ public class SingleSeasonActivity extends BaseActivity implements AdapterView.On
     {
         super.onResume();
 
-        mAdapter = new SingleSeasonAdapter(this, mDB.GetCursorEpisodes(_seriesId, _season), 0, _seriesId, _season);
-        mListView.setAdapter(mAdapter);
+        mAdapter.swapCursor(mDB.GetCursorEpisodes(_seriesId, _season));
+        mAdapter.notifyDataSetChanged();
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -63,6 +63,9 @@ public class SingleSeasonActivity extends BaseActivity implements AdapterView.On
 
         mListView = (ListView) findViewById(R.id.episode_single_season);
         mListView.setOnItemClickListener(this);
+
+        mAdapter = new SingleSeasonAdapter(this, mDB.GetCursorEpisodes(_seriesId, _season), 0, _seriesId, _season);
+        mListView.setAdapter(mAdapter);
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
     }

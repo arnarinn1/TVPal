@@ -14,6 +14,9 @@ import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import is.contracts.datacontracts.cinema.CinemaMovie;
@@ -35,14 +38,12 @@ public class CinemaAdapter extends BaseAdapter
     private Context context;
     private int layoutResourceId;
     private List<CinemaMovie> movies;
-    private SparseArray<Bitmap> images;
 
     public CinemaAdapter(Context context, int layoutResourceId, List<CinemaMovie> movies)
     {
         this.context = context;
         this.layoutResourceId = layoutResourceId;
         this.movies = movies;
-        this.images = new SparseArray<Bitmap>();
     }
 
     static class CinemaHolder
@@ -85,65 +86,12 @@ public class CinemaAdapter extends BaseAdapter
         holder.imdb.setText(movie.getImdb());
         holder.restricted.setText(movie.getRestricted());
 
-        if (images.indexOfKey(holder.position) < 0)
-        {
-            holder.image.setVisibility(View.INVISIBLE);
-            new GetMoviePoster(movie.getImageUrl(), position).execute(holder);
-        }
-        else
-        {
-            holder.image.setImageBitmap(images.get(holder.position, null));
-        }
+        Picasso.with(context)
+               .load(movie.getImageUrl())
+               .resizeDimen(R.dimen.poster_width, R.dimen.poster_height)
+               .into(holder.image);
 
         return row;
-    }
-
-    private class GetMoviePoster extends AsyncTask<CinemaHolder, Void, Bitmap>
-    {
-        private String posterUrl;
-        private CinemaHolder viewHolder;
-        private int position;
-
-        /**
-         * @param posterUrl The url of a picture to download
-         */
-        public GetMoviePoster(String posterUrl, int position)
-        {
-            this.posterUrl = posterUrl;
-            this.position = position;
-        }
-
-        @Override
-        protected Bitmap doInBackground(CinemaHolder... view)
-        {
-            viewHolder = view[0];
-            return GetPoster();
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap)
-        {
-            if (viewHolder.position == position)
-            {
-                viewHolder.image.setImageBitmap(bitmap);
-                viewHolder.image.setVisibility(View.VISIBLE);
-                images.put(viewHolder.position, bitmap);
-            }
-        }
-
-        private Bitmap GetPoster()
-        {
-            try
-            {
-                return PictureTask.getBitmapFromUrl(posterUrl);
-            }
-            catch (Exception ex)
-            {
-                Log.e(getClass().getName(), ex.getMessage());
-            }
-
-            return null;
-        }
     }
 
     @Override

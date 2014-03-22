@@ -5,7 +5,7 @@
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
-    <style name="AppBaseTheme" parent="android:Theme.Light">
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
@@ -16,12 +16,23 @@
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+
+    </style>
+
+    <style name="AppTheme.ActionBarTitleText" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/action_bar_text_color</item>
+    </style>
+
+    <style name="TvPalActionBarStyle" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:background">#000000</item>
+        <item name="android:titleTextStyle">@style/AppTheme.ActionBarTitleText</item>
     </style>
 
     <!-- TVPal theme -->
     <style name="TVPalTheme" parent="AppBaseTheme">
         <!-- When the app is loading up a activity we want to show the background as #222, not white -->
         <item name="android:windowBackground">@color/tvpal_theme_color</item>
+        <item name="android:actionBarStyle">@style/TvPalActionBarStyle</item>
     </style>
 
     <style name="DetailedMovieLabel" parent="AppBaseTheme">

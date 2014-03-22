@@ -10,6 +10,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/TVPalTheme"
+        android:hardwareAccelerated="true"
         android:debuggable="true">
         <activity
             android:name="is.gui.MainActivity"

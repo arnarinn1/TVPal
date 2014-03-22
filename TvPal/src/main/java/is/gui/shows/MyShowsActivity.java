@@ -57,16 +57,18 @@ public class MyShowsActivity extends BaseActivity implements AdapterView.OnItemC
         mGridView = (GridView) findViewById(R.id.myshows_series);
         mGridView.setOnItemClickListener(this);
 
-        SetListAdapterMyShows();
+        mAdapter = new MyShowsAdapter(this, mDB.GetCursorMyShows(), 0);
+        mGridView.setAdapter(mAdapter);
+
         registerForContextMenu(mGridView);
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    private void SetListAdapterMyShows()
+    private void UpdateCursor()
     {
-        mAdapter = new MyShowsAdapter(this, mDB.GetCursorMyShows(), 0);
-        mGridView.setAdapter(mAdapter);
+        mAdapter.swapCursor(mDB.GetCursorMyShows());
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -105,7 +107,7 @@ public class MyShowsActivity extends BaseActivity implements AdapterView.OnItemC
         try
         {
             mDB.RemoveShow(selectedShow);
-            SetListAdapterMyShows();
+            UpdateCursor();
             Toast.makeText(this, String.format("Removed %s from your shows", seriesTitle), Toast.LENGTH_SHORT).show();
         }
         catch (Exception ex)
