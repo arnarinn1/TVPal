@@ -8,7 +8,7 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/logo_background"
+        android:background="#222"
         android:padding="20sp"
         android:clickable="true"
         android:orientation="vertical"
@@ -58,24 +58,6 @@
 
         <include layout="@layout/blue_splitter"/>
 
-        <FrameLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:typeface="serif"
-                android:text="@string/about_data"
-                android:textColor="#fff"
-                android:paddingTop="30sp"
-                android:layout_gravity="bottom"
-                />
-
-        </FrameLayout>
-
-
     </LinearLayout>
 
     <ListView
@@ -84,8 +66,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:choiceMode="singleChoice"
-        android:divider="#AAA"
-        android:dividerHeight="0dp"
-        android:background="#eee"/>
+        android:divider="@null"
+        android:background="@drawable/drawer_background"/>
 
 </android.support.v4.widget.DrawerLayout>

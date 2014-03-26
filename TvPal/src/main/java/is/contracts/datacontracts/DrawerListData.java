@@ -46,11 +46,6 @@ public class DrawerListData implements IDrawerItem
         ((ImageView) view.findViewById(R.id.drawer_list_icon)).setImageResource(iconId);
         ((TextView) view.findViewById(R.id.drawer_list_title)).setText(name);
 
-        if (seperatorInvisible)
-            view.findViewById(R.id.lineSeperator).setVisibility(View.INVISIBLE);
-        else
-            view.findViewById(R.id.lineSeperator).setVisibility(View.VISIBLE);
-
         return view;
     }
 
