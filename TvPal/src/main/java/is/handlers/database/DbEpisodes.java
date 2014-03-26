@@ -446,36 +446,4 @@ public class DbEpisodes extends DatabaseHandler
 
         return seriesIds;
     }
-
-    public StatisticData GetStatisticData()
-    {
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        StatisticData sData = new StatisticData();
-
-        if (db != null)
-        {
-            String selectQuery = String.format("select count(*) from series " +
-                                 "union all " +
-                                 "select count(*) from episodes where aired = '%s' " +
-                                 "union all " +
-                                 "select count(*) from movies",
-                                 DateUtil.AddDaysToDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()), -1));
-
-            Cursor cursor = db.rawQuery(selectQuery, null);
-
-            cursor.moveToFirst(); //Number of shows
-            sData.setNumberOfShows(cursor.getInt(0));
-
-            cursor.moveToNext(); //Number of aired shows
-            sData.setNumberOfAiredShows(cursor.getInt(0));
-
-            cursor.moveToNext(); //Number of movies in watchlist
-            sData.setNumberOfMovies(cursor.getInt(0));
-
-            db.close();
-        }
-
-        return sData;
-    }
 }

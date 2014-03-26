@@ -2,14 +2,8 @@ package is.gui.base;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.ActivityOptions;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Build;
-import android.os.Bundle;
-import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.widget.DrawerLayout;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -32,22 +26,17 @@ import is.handlers.adapters.DrawerListAdapter;
 import is.parsers.cache.SchedulesCache;
 import is.tvpal.R;
 
-public class BaseNavDrawer extends Activity
+public class BaseNavDrawer extends Activity implements ListView.OnItemClickListener
 {
     public static final String EXTRA_STOD2 = "is.activites.STOD2";
     public static final String EXTRA_TITLE = "is.activites.TITLE";
     public static final String EXTRA_SCHEDULESCACHE = "is.activites.STOD2CACHE";
     public static final String EXTRA_LATESTUPDATE = "is.activites.STOD2LATESTUPDATE";
 
-    private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
-    private ActionBarDrawerToggle mDrawerToggle;
-
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     protected void InitializeNavDrawer()
     {
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        ListView mDrawerList = (ListView) findViewById(R.id.drawer);
 
         List<IDrawerItem> items = new ArrayList<IDrawerItem>();
         items.add(new DrawerListHeader(getResources().getString(R.string.schedule_header)));
@@ -68,64 +57,17 @@ public class BaseNavDrawer extends Activity
         items.add(new DrawerListData(getString(R.string.trakt_search_movies), R.drawable.m_glass_hvitur_64, false));
         items.add(new DrawerListData(getString(R.string.watchlist), R.drawable.watchlist_hvitur_64, true));
 
-        mDrawerList.setAdapter(
-                new DrawerListAdapter(this, items)
-        );
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-
-        // ActionBarDrawerToggle ties together the the proper interactions
-        // between the sliding drawer and the action bar app icon
-        mDrawerToggle = new ActionBarDrawerToggle(
-                this,
-                mDrawerLayout,
-                R.drawable.ic_drawer,
-                R.string.drawer_open,  /* "open drawer" description for accessibility */
-                R.string.drawer_close  /* "close drawer" description for accessibility */
-        ) {
-            public void onDrawerClosed(View view) {
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-
-            public void onDrawerOpened(View drawerView) {
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-        };
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-        mDrawerLayout.openDrawer(mDrawerList);
-
-        // enable ActionBar app icon to behave as action to toggle nav drawer
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        mDrawerList.setAdapter(new DrawerListAdapter(this, items));
+        mDrawerList.setOnItemClickListener(this);
     }
 
     @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
-        mDrawerToggle.syncState();
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+    {
+        StartActivity(position);
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        mDrawerToggle.onConfigurationChanged(newConfig);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Pass the event to ActionBarDrawerToggle, if it returns
-        // true, then it has handled the app icon touch event
-        return super.onOptionsItemSelected(item) || mDrawerToggle.onOptionsItemSelected(item);
-    }
-
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-        {
-            StartActivity(position, view);
-        }
-    }
-
-    private void StartActivity(int position, View view)
+    private void StartActivity(int position)
     {
         try
         {
@@ -200,9 +142,6 @@ public class BaseNavDrawer extends Activity
                     intent = new Intent(this, WatchlistActivity.class);
                     break;
             }
-
-            mDrawerList.setItemChecked(position, true);
-            mDrawerLayout.closeDrawer(mDrawerList);
 
             startActivity(intent);
             overridePendingTransition(R.anim.fade_in_activity, R.anim.fade_out_activity);

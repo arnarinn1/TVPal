@@ -29,6 +29,7 @@ public class WatchlistActivity extends BaseFragmentActivity implements AdapterVi
     private ImageView mWatchListPoster;
     private TextView mWatchlistDesc;
     private Button mCloseButton;
+    private TextView mEmptyWatchList;
 
     private DbMovies mDb;
 
@@ -50,6 +51,10 @@ public class WatchlistActivity extends BaseFragmentActivity implements AdapterVi
 
         registerForContextMenu(mGridView);
         mDb = new DbMovies(this);
+
+        if (!(mDb.GetWatchlistCursor().moveToFirst()) || mDb.GetWatchlistCursor().getCount() ==0)
+            mEmptyWatchList.setVisibility(View.VISIBLE);
+
         mAdapter = new WatchListAdapter(this, mDb.GetWatchlistCursor(), 0);
         mGridView.setAdapter(mAdapter);
     }
@@ -88,7 +93,10 @@ public class WatchlistActivity extends BaseFragmentActivity implements AdapterVi
     private void UpdateCursor()
     {
         mAdapter.swapCursor(mDb.GetWatchlistCursor());
-        mAdapter.notifyDataSetChanged();;
+        mAdapter.notifyDataSetChanged();
+
+        if (!(mDb.GetWatchlistCursor().moveToFirst()) || mDb.GetWatchlistCursor().getCount() ==0)
+            mEmptyWatchList.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -144,6 +152,7 @@ public class WatchlistActivity extends BaseFragmentActivity implements AdapterVi
         mWatchListPoster = (ImageView) findViewById(R.id.watchlistTitle);
         mWatchlistDesc = (TextView) findViewById(R.id.watchListDesc);
         mCloseButton = (Button) findViewById(R.id.closeSlider);
+        mEmptyWatchList = (TextView) findViewById(R.id.emptyWatchList);
     }
 
     private void AttachEventListeners()
