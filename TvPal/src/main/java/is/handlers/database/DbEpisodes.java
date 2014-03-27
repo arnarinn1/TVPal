@@ -141,8 +141,7 @@ public class DbEpisodes extends DatabaseHandler
             {
                 AddSeries(series, db);
 
-                for (Episode e : episodes)
-                    AddEpisode(db, e);
+                AddEpisodes(db, episodes);
 
                 db.setTransactionSuccessful();
             }
@@ -181,6 +180,34 @@ public class DbEpisodes extends DatabaseHandler
         }
     }
 
+    public void AddEpisodes(SQLiteDatabase db, List<Episode> episodes)
+    {
+        try
+        {
+            for(Episode episode : episodes)
+            {
+                ContentValues values = new ContentValues();
+                values.put(KEY_E_EPISODEID, episode.getId());
+                values.put(KEY_S_SERIESID, episode.getSeriesId());
+                values.put(KEY_E_SEASON, episode.getSeasonNumber());
+                values.put(KEY_E_EPISODE, episode.getEpisodeNumber());
+                values.put(KEY_E_EPISODENAME, episode.getEpisodeName());
+                values.put(KEY_E_AIRED, episode.getFirstAired());
+                values.put(KEY_S_OVERVIEW, episode.getOverview());
+                values.put(KEY_E_SEEN, 0);
+                values.put(KEY_E_DIRECTOR, episode.getDirector());
+                values.put(KEY_E_RATING, episode.getRating());
+                values.put(KEY_E_GUESTSTARS, episode.getGuestStars());
+
+                db.insert(TABLE_EPISODES, null, values);
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.e(getClass().getName(), ex.getMessage());
+        }
+    }
+
     public void AddEpisode(SQLiteDatabase db, Episode episode)
     {
         try
@@ -206,41 +233,78 @@ public class DbEpisodes extends DatabaseHandler
         }
     }
 
-    public void RemoveShow(int seriesId)
+    public void UpdateEpisode(SQLiteDatabase db, Episode episode)
     {
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_SERIES, KEY_S_SERIESID + " = " + seriesId, null);
-        db.delete(TABLE_EPISODES, KEY_E_SERIESID + " = " + seriesId, null);
-        db.close();
+        try
+        {
+            ContentValues values = new ContentValues();
+            values.put(KEY_E_EPISODEID, episode.getId());
+            values.put(KEY_S_SERIESID, episode.getSeriesId());
+            values.put(KEY_E_SEASON, episode.getSeasonNumber());
+            values.put(KEY_E_EPISODE, episode.getEpisodeNumber());
+            values.put(KEY_E_EPISODENAME, episode.getEpisodeName());
+            values.put(KEY_E_AIRED, episode.getFirstAired());
+            values.put(KEY_S_OVERVIEW, episode.getOverview());
+            values.put(KEY_E_DIRECTOR, episode.getDirector());
+            values.put(KEY_E_RATING, episode.getRating());
+            values.put(KEY_E_GUESTSTARS, episode.getGuestStars());
+
+            db.update(TABLE_EPISODES, values, KEY_E_EPISODEID + " = " + episode.getId(), null);
+        }
+        catch (Exception ex)
+        {
+            Log.e(getClass().getName(), ex.getMessage());
+        }
     }
 
-    public void UpdateSingleSeries(List<EpisodeData> episodes, int latestUpdate, int seriesId)
+    public void RemoveShow(int seriesId)
     {
         SQLiteDatabase db = this.getWritableDatabase();
         db.beginTransaction();
 
         try
         {
-            for (EpisodeData e : episodes)
+            db.delete(TABLE_SERIES, KEY_S_SERIESID + " = " + seriesId, null);
+            db.delete(TABLE_EPISODES, KEY_E_SERIESID + " = " + seriesId, null);
+            db.setTransactionSuccessful();
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+        finally
+        {
+            db.endTransaction();
+        }
+
+        db.close();
+    }
+
+    public void UpdateSingleSeries(List<Episode> episodes, int latestUpdate, int seriesId)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.beginTransaction();
+
+        try
+        {
+            for (Episode e : episodes)
             {
-                if (!DoesEpisodeExist(db, e.getEpisodeId())) {
-                    //AddEpisode(db, e);
+                if (!DoesEpisodeExist(db, e.getId()))
+                {
+                    AddEpisode(db, e);
                     Log.d(getClass().getName(), "Updating episode: " + e.getEpisodeName());
                 }
-                else {
+                else
+                {
                     UpdateEpisode(db, e);
                     Log.d(getClass().getName(), "Updating episode: " + e.getEpisodeName());
                 }
             }
 
-            //Only update latestUpdate column if we have episodes to update
-            if (episodes.size() > 0)
-            {
-                //Finally update latest update column in seriesTable
-                ContentValues values = new ContentValues();
-                values.put(KEY_S_LASTUPDATED, latestUpdate);
-                db.update(TABLE_SERIES, values, KEY_S_SERIESID + " = " + seriesId, null);
-            }
+            //Finally update latest update column in seriesTable
+            ContentValues values = new ContentValues();
+            values.put(KEY_S_LASTUPDATED, latestUpdate);
+            db.update(TABLE_SERIES, values, KEY_S_SERIESID + " = " + seriesId, null);
 
             db.setTransactionSuccessful();
         }
@@ -254,30 +318,6 @@ public class DbEpisodes extends DatabaseHandler
         }
 
         db.close();
-    }
-
-    public void UpdateEpisode(SQLiteDatabase db, EpisodeData episode)
-    {
-        try
-        {
-            ContentValues values = new ContentValues();
-            values.put(KEY_E_EPISODEID, episode.getEpisodeId());
-            values.put(KEY_S_SERIESID, episode.getSeriesId());
-            values.put(KEY_E_SEASON, episode.getSeasonNumber());
-            values.put(KEY_E_EPISODE, episode.getEpisodeNumber());
-            values.put(KEY_E_EPISODENAME, episode.getEpisodeName());
-            values.put(KEY_E_AIRED, episode.getAired());
-            values.put(KEY_S_OVERVIEW, episode.getOverview());
-            values.put(KEY_E_DIRECTOR, episode.getDirector());
-            values.put(KEY_E_RATING, episode.getRating());
-            values.put(KEY_E_GUESTSTARS, episode.getGuestStars());
-
-            db.update(TABLE_EPISODES, values, KEY_E_EPISODEID + " = " + episode.getEpisodeId(), null);
-        }
-        catch (Exception ex)
-        {
-            Log.e(getClass().getName(), ex.getMessage());
-        }
     }
 
     /*

@@ -18,11 +18,14 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import is.gui.base.BaseActivity;
+import is.gui.base.IActivity;
 import is.gui.dialogs.RemoveShowDialog;
 import is.handlers.database.DbEpisodes;
 import is.handlers.adapters.MyShowsAdapter;
+import is.parsers.tvdb.TvdbSeriesUpdateWorker;
 import is.thetvdb.TvDbUtil;
 import is.tvpal.R;
+import is.utilities.ConnectionListener;
 
 /**
  * Displays all series that a user has added to his shows
@@ -120,8 +123,12 @@ public class MyShowsActivity extends BaseActivity implements AdapterView.OnItemC
     {
         Cursor show = (Cursor) mAdapter.getItem(position);
 
-        TvDbUtil update = new TvDbUtil(this);
-        update.UpdateSeries(show.getInt(0), mProgressBar);
+        boolean networkAvailable = ConnectionListener.isNetworkAvailable(this);
+
+        if(networkAvailable)
+            new TvdbSeriesUpdateWorker(this, mProgressBar).execute(show.getInt(0));
+        else
+            Toast.makeText(this, "Connect to a network to update show", Toast.LENGTH_SHORT).show();
     }
 
     private void SeenAllEpisodes(int position)
@@ -176,7 +183,7 @@ public class MyShowsActivity extends BaseActivity implements AdapterView.OnItemC
     private void RemoveShowDialog(int position, String seriesTitle)
     {
         RemoveShowDialog removeShowDialog = RemoveShowDialog.newInstance(position, seriesTitle);
-        removeShowDialog.show(getFragmentManager(), "tag_removeshow"); //TODO: Look into this tag thingy
+        removeShowDialog.show(getFragmentManager(), "tag_removeshow");
     }
 
     @Override

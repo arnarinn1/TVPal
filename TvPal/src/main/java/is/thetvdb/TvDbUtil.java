@@ -28,13 +28,6 @@ public class TvDbUtil
         this.context = context;
     }
 
-    public void UpdateSeries(int seriesId, ProgressBar progressBar)
-    {
-        DbEpisodes db = new DbEpisodes(context);
-        int lastUpdate = Integer.parseInt(db.GetSeriesLastUpdate(seriesId));
-        new UpdateSingleSeriesTask(context, lastUpdate, seriesId, progressBar).execute(String.format("%s%s/all/en.xml", ApiUrl, seriesId));
-    }
-
     public void UpdateAllSeries(ProgressBar progressBar)
     {
         new UpdateAllSeriesTask(context, progressBar).execute();
@@ -44,87 +37,6 @@ public class TvDbUtil
     {
         DbEpisodes db = new DbEpisodes(context);
         db.SetSeriesSeen(seriesId);
-    }
-
-    /**
-     * A class to update single series
-     * It creates a new thread to handle network communications
-     * @author Arnar
-     * @see android.os.AsyncTask
-     */
-    private class UpdateSingleSeriesTask extends AsyncTask<String, Void, String>
-    {
-        private Context context;
-        private int lastUpdate;
-        private int seriesId;
-        private ProgressBar progressBar;
-
-        /**
-         * @param context The current application context
-         * @param lastUpdate The latest time the series was updated, stored as unix time
-         * @param seriesId The id of the series to be updated
-         */
-        public UpdateSingleSeriesTask(Context context, int lastUpdate, int seriesId, ProgressBar progressBar)
-        {
-            this.context = context;
-            this.lastUpdate = lastUpdate;
-            this.seriesId = seriesId;
-            this.progressBar = progressBar;
-        }
-
-        @Override
-        protected String doInBackground(String... urls)
-        {
-            try
-            {
-                return UpdateEpisodesOfSeries(urls[0]);
-            }
-            catch (IOException e)
-            {
-                return "Unable to retrieve web page. URL may be invalid";
-            }
-        }
-
-        @Override
-        protected void onPreExecute()
-        {
-            progressBar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected void onPostExecute(String result)
-        {
-            if (result.equalsIgnoreCase("error"))
-                Toast.makeText(context, "Whoops, something went wrong...", Toast.LENGTH_SHORT).show();
-
-            progressBar.setVisibility(View.INVISIBLE);
-        }
-
-        private String UpdateEpisodesOfSeries(String myurl) throws IOException
-        {
-            try
-            {
-                ConnectionListener network = new ConnectionListener(context);
-                DbEpisodes db = new DbEpisodes(context);
-
-                if (network.isNetworkAvailable())
-                {
-                    TvDbUpdateParser parser = new TvDbUpdateParser(myurl, lastUpdate);
-
-                    List<EpisodeData> episodes = parser.GetEpisodes();
-
-                    db.UpdateSingleSeries(episodes, parser.getLatestSeriesUpdate(), seriesId);
-
-                    return Integer.toString(episodes.size());
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.e(getClass().getName(), ex.getMessage());
-            }
-
-            return "error";
-        }
     }
 
     /**
@@ -193,7 +105,7 @@ public class TvDbUtil
 
                         List<EpisodeData> episodes = parser.GetEpisodes();
 
-                        db.UpdateSingleSeries(episodes, parser.getLatestSeriesUpdate(), seriesId);
+                        //db.UpdateSingleSeries(episodes, parser.getLatestSeriesUpdate(), seriesId);
                     }
                 }
 

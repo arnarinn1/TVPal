@@ -41,6 +41,9 @@ public class Episode
     @Element(name = "filename", required = false)
     private String image;
 
+    @Element(name = "lastupdated", required = true)
+    private int lastUpdated;
+
     public int getId() { return id; }
     public int getSeriesId() { return seriesId; }
     public int getSeasonNumber() { return seasonNumber; }
@@ -52,6 +55,7 @@ public class Episode
     public String getDirector() {return director; }
     public String getGuestStars() { return guestStars == null ? null : StringUtil.ArrayToString(guestStars); }
     public String getImage() {return image; }
+    public int getLastUpdated() { return lastUpdated; }
 
     @Override
     public String toString()
