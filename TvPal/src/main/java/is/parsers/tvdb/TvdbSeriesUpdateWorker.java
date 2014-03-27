@@ -60,7 +60,7 @@ public class TvdbSeriesUpdateWorker extends AsyncTask<Integer, Void, Boolean>
     {
         RestAdapter restAdapter = RetrofitUtil.RestAdapterXMLInstance();
 
-        int lastLocalUpdate = Integer.parseInt(new DbEpisodes(mContext).GetSeriesLastUpdate(seriesId));
+        int lastLocalUpdate = new DbEpisodes(mContext).GetSeriesLastUpdate(seriesId);
         //int lastLocalUpdate = 1395534040; //just for testing
 
         TvdbService service = restAdapter.create(TvdbService.class);

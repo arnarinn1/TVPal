@@ -448,7 +448,7 @@ public class DbEpisodes extends DatabaseHandler
         return cursor.getInt(0);
     }
 
-    public String GetSeriesLastUpdate(int seriesId)
+    public int GetSeriesLastUpdate(int seriesId)
     {
         String selectQuery = String.format("select seriesId as _id, lastupdated from series where seriesId = %d", seriesId);
 
@@ -457,7 +457,7 @@ public class DbEpisodes extends DatabaseHandler
         Cursor cursor = db.rawQuery(selectQuery ,null);
 
         cursor.moveToFirst();
-        return cursor.getString(1);
+        return cursor.getInt(1);
     }
 
     public boolean DoesEpisodeExist(SQLiteDatabase db, int episodeId)

@@ -18,12 +18,11 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import is.gui.base.BaseActivity;
-import is.gui.base.IActivity;
 import is.gui.dialogs.RemoveShowDialog;
 import is.handlers.database.DbEpisodes;
 import is.handlers.adapters.MyShowsAdapter;
+import is.parsers.tvdb.TvdbSeriesUpdateAllWorker;
 import is.parsers.tvdb.TvdbSeriesUpdateWorker;
-import is.thetvdb.TvDbUtil;
 import is.tvpal.R;
 import is.utilities.ConnectionListener;
 
@@ -135,8 +134,8 @@ public class MyShowsActivity extends BaseActivity implements AdapterView.OnItemC
     {
         Cursor cursor = (Cursor) mAdapter.getItem(position);
 
-        TvDbUtil tvdb = new TvDbUtil(this);
-        tvdb.SetAllEpisodesOfSeriesSeen(cursor.getInt(0));
+        DbEpisodes db = new DbEpisodes(this);
+        db.SetSeriesSeen(cursor.getInt(0));
     }
 
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l)
@@ -168,8 +167,12 @@ public class MyShowsActivity extends BaseActivity implements AdapterView.OnItemC
 
     private void UpdateAllShows()
     {
-        TvDbUtil tv = new TvDbUtil(this);
-        tv.UpdateAllSeries(mProgressBar);
+        boolean networkAvailable = ConnectionListener.isNetworkAvailable(this);
+
+        if(networkAvailable)
+            new TvdbSeriesUpdateAllWorker(this, mProgressBar).execute();
+        else
+            Toast.makeText(this, "Connect to a network to update shows", Toast.LENGTH_SHORT).show();
     }
 
     @Override

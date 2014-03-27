@@ -12,21 +12,10 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import is.contracts.datacontracts.SeriesData;
 import is.contracts.datacontracts.tvdb.SeriesMinimal;
-import is.contracts.datacontracts.tvdb.ShowData;
-import is.handlers.database.DatabaseHandler;
 import is.handlers.database.DbEpisodes;
 import is.parsers.tvdb.TvdbSeriesWorker;
-import is.thetvdb.TvDbUtil;
 import is.tvpal.R;
-import is.webservices.SimpleXMLConverter;
-import is.webservices.TvdbService;
-import retrofit.Callback;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.ApacheClient;
-import retrofit.client.Response;
 
 /**
  * Created by Arnar on 12.10.2013.

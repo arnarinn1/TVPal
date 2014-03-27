@@ -20,12 +20,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 import is.contracts.datacontracts.trakt.TraktEpisodeData;
-import is.handlers.database.DatabaseHandler;
 import is.handlers.database.DbEpisodes;
 import is.parsers.tvdb.TvdbSeriesWorker;
-import is.thetvdb.TvDbUtil;
 import is.tvpal.R;
-import is.utilities.PictureTask;
 import is.utilities.StringUtil;
 
 /**
