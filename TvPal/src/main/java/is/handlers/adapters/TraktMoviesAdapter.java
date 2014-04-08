@@ -21,6 +21,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import is.contracts.datacontracts.trakt.TraktMovieData;
+import is.gui.TraktThumbnailSize;
 import is.tvpal.R;
 import is.utilities.PictureTask;
 import is.utilities.StringUtil;
@@ -84,7 +85,7 @@ public class TraktMoviesAdapter extends BaseAdapter
         holder.title.setText(movie.getTitle());
         holder.overview.setText(movie.getOverview());
 
-        final String posterUrl = StringUtil.formatTrendingPosterUrl(movie.getImage().getPoster(), "-138");
+        final String posterUrl = StringUtil.formatTrendingPosterUrl(movie.getImage().getPoster(), TraktThumbnailSize.Small);
 
         Picasso
                 .with(mContext)

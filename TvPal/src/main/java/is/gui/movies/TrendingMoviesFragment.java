@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import is.gui.TraktThumbnailSize;
 import is.gui.base.BaseFragment;
 import is.contracts.datacontracts.trakt.TraktMovieData;
 import is.handlers.adapters.TraktMoviesAdapter;
@@ -80,7 +81,7 @@ public class TrendingMoviesFragment extends BaseFragment implements AdapterView.
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l)
     {
         TraktMovieData data = mAdapter.getItem(position);
-        String posterUrl = StringUtil.formatTrendingPosterUrl(data.getImage().getPoster(), "-300");
+        String posterUrl = StringUtil.formatTrendingPosterUrl(data.getImage().getPoster(), TraktThumbnailSize.Medium);
 
         Intent intent = new Intent(mContext, DetailedMovieActivity.class);
         intent.putExtra(EXTRA_MOVIEID, data.getImdbId());

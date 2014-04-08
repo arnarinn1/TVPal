@@ -95,9 +95,9 @@ public class TraktCommentsActivity extends BaseActivity
     };
 
     @Override
-    public void onBackPressed()
+    public void finish()
     {
-        super.onBackPressed();
+        super.finish();
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 }

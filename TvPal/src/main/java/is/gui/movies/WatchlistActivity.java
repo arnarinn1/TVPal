@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.slidinglayer.SlidingLayer;
 import com.squareup.picasso.Picasso;
 
+import is.gui.TraktThumbnailSize;
 import is.gui.base.BaseFragmentActivity;
 import is.handlers.adapters.WatchListAdapter;
 import is.handlers.database.DbMovies;
@@ -108,7 +109,7 @@ public class WatchlistActivity extends BaseFragmentActivity implements AdapterVi
         {
             mSlidingLayer.openLayer(true);
 
-            final String posterUrl = StringUtil.formatTrendingPosterUrl(movie.getString(3), "-138");
+            final String posterUrl = StringUtil.formatTrendingPosterUrl(movie.getString(3), TraktThumbnailSize.Small);
 
             Picasso.with(this)
                     .load(posterUrl)

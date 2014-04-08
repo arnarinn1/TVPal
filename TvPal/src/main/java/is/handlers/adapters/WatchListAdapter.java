@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import is.gui.TraktThumbnailSize;
 import is.tvpal.R;
 import is.utilities.PictureTask;
 import is.utilities.StringUtil;
@@ -72,7 +73,7 @@ public class WatchListAdapter extends CursorAdapter
         viewHolder.title.setText(mCursor.getString(Movie.Title));
         viewHolder.overview.setText(mCursor.getString(Movie.Overview));
 
-        final String posterUrl = StringUtil.formatTrendingPosterUrl(mCursor.getString(Movie.ImageUrl), "-138");
+        final String posterUrl = StringUtil.formatTrendingPosterUrl(mCursor.getString(Movie.ImageUrl), TraktThumbnailSize.Small);
 
         Picasso
                 .with(mContext)

@@ -11,13 +11,12 @@
         android:id="@+id/relatedMovies"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_marginTop="6sp"
         android:numColumns="auto_fit"
         android:stretchMode="columnWidth"
         android:gravity="center"
-        android:columnWidth="400sp"
-        android:verticalSpacing="15dip"
-        android:horizontalSpacing="15dip"/>
+        android:columnWidth="150sp"
+        android:verticalSpacing="3dip"
+        android:horizontalSpacing="3dip"/>
 
     <ProgressBar
         android:id="@+id/progressIndicator"

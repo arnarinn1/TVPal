@@ -20,6 +20,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 import is.contracts.datacontracts.trakt.TraktEpisodeData;
+import is.gui.TraktThumbnailSize;
 import is.handlers.database.DbEpisodes;
 import is.parsers.tvdb.TvdbSeriesWorker;
 import is.tvpal.R;
@@ -113,7 +114,7 @@ public class TraktEpisodeAdapter extends BaseAdapter
             }
         });
 
-        final String posterUrl = StringUtil.formatTrendingPosterUrl(show.getPoster(), "-138");
+        final String posterUrl = StringUtil.formatTrendingPosterUrl(show.getPoster(), TraktThumbnailSize.Small);
 
         Picasso
                 .with(mContext)
