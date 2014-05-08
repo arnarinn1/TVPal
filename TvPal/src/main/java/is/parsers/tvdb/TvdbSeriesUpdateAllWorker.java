@@ -74,7 +74,7 @@ public class TvdbSeriesUpdateAllWorker extends AsyncTask<Integer, Void, Boolean>
             if (network.isNetworkAvailable())
             {
                 int lastLocalUpdate = db.GetSeriesLastUpdate(seriesId);
-                //int lastLocalUpdate = 1395534040; //just for testing
+                //int lastLocalUpdate = 1396979565; //just for testing
 
                 ShowData series = service.getSeries(seriesId);
 
