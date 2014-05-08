@@ -1,4 +1,4 @@
-package is.gui;
+package is.gui.base;
 
 /**
  * Created by Arnar on 8.4.2014.

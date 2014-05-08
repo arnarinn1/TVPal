@@ -2,26 +2,18 @@ package is.handlers.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.os.AsyncTask;
-import android.util.Log;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 import is.contracts.datacontracts.trakt.TraktMovieDetailedData;
-import is.gui.TraktThumbnailSize;
+import is.gui.base.TraktThumbnailSize;
 import is.tvpal.R;
-import is.utilities.PictureTask;
 import is.utilities.StringUtil;
 
 public class TraktRelatedMoviesAdapter extends BaseAdapter

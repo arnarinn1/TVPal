@@ -2,10 +2,7 @@ package is.handlers.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.support.v4.widget.CursorAdapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +11,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import is.gui.TraktThumbnailSize;
+import is.gui.base.TraktThumbnailSize;
 import is.tvpal.R;
-import is.utilities.PictureTask;
 import is.utilities.StringUtil;
 
 public class WatchListAdapter extends CursorAdapter

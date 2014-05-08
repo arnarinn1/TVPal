@@ -56,4 +56,17 @@ public class StringUtil
 
         return sb.toString();
     }
+
+    public static String GetTraktActorsAndCharacters(List<TraktPerson> actors)
+    {
+        StringBuilder sb = new StringBuilder();
+
+        for (TraktPerson actor : actors)
+        {
+            sb.append(String.format("%s (%s)", actor.getName(), actor.getCharacter())).append("\n");
+        }
+
+        return sb.toString();
+    }
+
 }

@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import is.gui.TraktThumbnailSize;
+import is.gui.base.TraktThumbnailSize;
 import is.gui.base.BaseFragment;
 import is.contracts.datacontracts.trakt.TraktMovieData;
 import is.handlers.adapters.TraktMoviesAdapter;

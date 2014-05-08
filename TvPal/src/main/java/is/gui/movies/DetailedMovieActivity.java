@@ -114,7 +114,7 @@ public class DetailedMovieActivity extends BaseActivity
                 mTitle.setText(movie.getTitle());
                 mRuntime.setText(String.format("%d min", movie.getRuntime()));
                 mGenres.setText(StringUtil.JoinArrayToString(movie.getGenres()));
-                mActors.setText(StringUtil.GetTraktPeople(movie.getPeople().getActors()));
+                mActors.setText(StringUtil.GetTraktActorsAndCharacters(movie.getPeople().getActors()));
                 mDirectors.setText(StringUtil.GetTraktPeople(movie.getPeople().getDirectors()));
                 mRating.setText(movie.getRating().getPercentage() + " %");
                 mReleaseYear.setText(String.format("%d", movie.getReleaseYear()));

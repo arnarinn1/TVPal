@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.slidinglayer.SlidingLayer;
 import com.squareup.picasso.Picasso;
 
-import is.gui.TraktThumbnailSize;
+import is.gui.base.TraktThumbnailSize;
 import is.gui.base.BaseFragmentActivity;
 import is.handlers.adapters.WatchListAdapter;
 import is.handlers.database.DbMovies;
