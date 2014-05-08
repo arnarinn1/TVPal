@@ -67,18 +67,6 @@
         />
 
         <TextView
-            android:id="@+id/episodeSeason"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Season:"
-            android:textColor="#DDD"
-            android:textSize="16sp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:paddingTop="10sp"
-            android:typeface="serif"/>
-
-        <TextView
             android:id="@+id/episodeOverview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -74,15 +74,15 @@ public class EpisodeFragment extends BaseFragment
             });
 
             final String guestStars = episode.getGuestStars() == null ? "No Guest Stars" : episode.getGuestStars();
-
+            final String director = episode.getDirector();
+            final String rating = episode.getRating();
             episodeSeenCbx.setChecked(episode.getSeen() == 1);
 
             ((TextView) getView().findViewById(R.id.episodeTitle)).setText(episode.getEpisodeName());
             ((TextView) getView().findViewById(R.id.episodeAired)).setText(String.format("Aired: %s", episode.getAired()));
-            ((TextView) getView().findViewById(R.id.episodeSeason)).setText(String.format("Season: %s", episode.getSeasonNumber()));
             ((TextView) getView().findViewById(R.id.episodeOverview)).setText(episode.getOverview());
-            ((TextView) getView().findViewById(R.id.episodeDirector)).setText(episode.getDirector());
-            ((TextView) getView().findViewById(R.id.episodeRating)).setText(episode.getRating());
+            ((TextView) getView().findViewById(R.id.episodeDirector)).setText(director == null ? "Unknown" : director);
+            ((TextView) getView().findViewById(R.id.episodeRating)).setText(rating == null ? "No rating" : rating);
             ((TextView) getView().findViewById(R.id.episodeGuestStars)).setText(guestStars);
             poster = (ImageView) getView().findViewById(R.id.episodePicture);
 
@@ -99,7 +99,7 @@ public class EpisodeFragment extends BaseFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        return inflater.inflate(R.layout.activity_episode, container, false);
+        return inflater.inflate(R.layout.fragment_episode, container, false);
     }
 
     private Callback imageCallback = new Callback()
