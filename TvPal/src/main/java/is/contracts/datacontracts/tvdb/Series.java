@@ -11,28 +11,28 @@ public class Series
     @Element(name = "id")
     private int id;
 
-    @Element(name = "Actors")
+    @Element(name = "Actors", required = false)
     private String actors;
 
     @Element(name = "SeriesName")
     private String seriesName;
 
-    @Element(name = "Overview")
+    @Element(name = "Overview", required = false)
     private String overview;
 
-    @Element(name = "Network")
+    @Element(name = "Network", required = false)
     private String network;
 
     @Element(name = "lastupdated")
     private int lastUpdated;
 
-    @Element(name = "Genre")
+    @Element(name = "Genre", required = false)
     private String genre;
 
-    @Element(name = "IMDB_ID")
+    @Element(name = "IMDB_ID", required = false)
     private String imdbId;
 
-    @Element(name = "poster")
+    @Element(name = "poster", required = false)
     private String poster;
 
     private byte[] posterByteStream;

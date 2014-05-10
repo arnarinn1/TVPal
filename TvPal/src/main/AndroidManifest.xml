@@ -20,7 +20,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
+        </activity>1
         <activity
             android:name="is.gui.schedules.DisplayStod2Activity"
             android:configChanges="keyboardHidden|orientation|screenSize"
