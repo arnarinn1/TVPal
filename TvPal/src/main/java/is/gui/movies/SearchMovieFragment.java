@@ -21,6 +21,8 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import is.gui.base.TraktThumbnailSize;
 import is.gui.base.BaseFragment;
 import is.contracts.datacontracts.trakt.TraktMovieData;
@@ -43,12 +45,13 @@ import retrofit.client.Response;
 
 public class SearchMovieFragment extends BaseFragment implements AdapterView.OnItemClickListener
 {
-    private EditText mEditSearch;
-    private Context mContext;
-    private TraktMoviesAdapter mAdapter;
-    private GridView mGridView;
-    private ProgressBar mProgressBar;
+    @InjectView(R.id.traktSearchMovie)       EditText mEditSearch;
+    @InjectView(R.id.traktMovieResults)      GridView mGridView;
+    @InjectView(R.id.traktProgressIndicator) ProgressBar mProgressBar;
+
     private TraktService mService;
+    private TraktMoviesAdapter mAdapter;
+    private DbMovies mCursor;
 
     public SearchMovieFragment() {}
 
@@ -64,11 +67,9 @@ public class SearchMovieFragment extends BaseFragment implements AdapterView.OnI
     public void onActivityCreated(Bundle savedInstanceState)
     {
         super.onActivityCreated(savedInstanceState);
-        mContext = activity.getContext();
-        mEditSearch = (EditText) getView().findViewById(R.id.traktSearchMovie);
-        mGridView = (GridView) getView().findViewById(R.id.traktMovieResults);
+
         mGridView.setOnItemClickListener(this);
-        mProgressBar = (ProgressBar) getView().findViewById(R.id.traktProgressIndicator);
+        mCursor = new DbMovies(activity.getContext());
 
         registerForContextMenu(mGridView);
 
@@ -81,7 +82,9 @@ public class SearchMovieFragment extends BaseFragment implements AdapterView.OnI
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        return inflater.inflate(R.layout.fragment_search_movie, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_search_movie, container, false);
+        ButterKnife.inject(this, rootView);
+        return rootView;
     }
 
     private void InitializeEditTextSearch()
@@ -92,7 +95,7 @@ public class SearchMovieFragment extends BaseFragment implements AdapterView.OnI
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     performSearch();
 
-                    InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Activity.INPUT_METHOD_SERVICE);
+                    InputMethodManager imm = (InputMethodManager) activity.getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
                     imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0); //Close the keyboard
 
                     return true;
@@ -136,10 +139,10 @@ public class SearchMovieFragment extends BaseFragment implements AdapterView.OnI
         try
         {
             TraktMovieData movie = mAdapter.getItem(position);
-            DbMovies db = new DbMovies(mContext);
-            db.AddMovieToWatchList(movie);
 
-            Toast.makeText(mContext, String.format("Added %s to your watchlist", movie.getTitle()), Toast.LENGTH_SHORT).show();
+            mCursor.AddMovieToWatchList(movie);
+
+            Toast.makeText(activity.getContext(), String.format("Added %s to your watchlist", movie.getTitle()), Toast.LENGTH_SHORT).show();
         }
         catch (Exception ex)
         {
@@ -154,17 +157,18 @@ public class SearchMovieFragment extends BaseFragment implements AdapterView.OnI
 
         String posterUrl = StringUtil.formatTrendingPosterUrl(movie.getImage().getPoster(), TraktThumbnailSize.Medium);
 
-        Intent intent = new Intent(mContext, DetailedMovieActivity.class);
+        Intent intent = new Intent(activity.getContext(), DetailedMovieActivity.class);
         intent.putExtra(TrendingMoviesFragment.EXTRA_MOVIEID, movie.getImdbId());
         intent.putExtra(TrendingMoviesFragment.EXTRA_MOVIEPOSTER, posterUrl);
         startActivity(intent);
+        ((Activity)activity.getContext()).overridePendingTransition(R.anim.fade_in_activity, R.anim.fade_out_activity);
     }
 
     Callback<List<TraktMovieData>> searchMovieCallback = new Callback<List<TraktMovieData>>() {
         @Override
         public void success(List<TraktMovieData> movies, Response response)
         {
-            mAdapter = new TraktMoviesAdapter(mContext, R.layout.listview_trakt_movies, movies);
+            mAdapter = new TraktMoviesAdapter(activity.getContext(), R.layout.listview_trakt_movies, movies);
             EnforceViewBehavior(mAdapter, View.GONE);
         }
 

@@ -17,6 +17,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import is.gui.base.BaseActivity;
 import is.contracts.datacontracts.trakt.TraktMovieData;
 import is.contracts.datacontracts.trakt.TraktMovieDetailedData;
@@ -36,23 +38,23 @@ public class DetailedMovieActivity extends BaseActivity
 {
     public static final String EXTRA_MOVIEID = "is.activites.movieActivities.EXTRA_MOVIEID";
 
-    private ProgressBar mProgressBar;
-    private TextView mOverview;
-    private TextView mTitle;
-    private ImageView mPoster;
-    private TextView mRuntime;
-    private TextView mGenres;
-    private Button mYoutubeIntent;
-    private Button mImdbIntent;
-    private LinearLayout mLayout;
-    private TextView mActors;
-    private TextView mDirectors;
-    private Button mTraktIntent;
-    private TextView mRating;
-    private TextView mReleaseYear;
-    private Button mTraktCommentsActivity;
-    private Button mWatchlist;
-    private Button mRelatedMovies;
+    @InjectView(R.id.progressIndicator)       ProgressBar mProgressBar;
+    @InjectView(R.id.movieOverview)           TextView mOverview;
+    @InjectView(R.id.movieTitle)              TextView mTitle;
+    @InjectView(R.id.moviePoster)             ImageView mPoster;
+    @InjectView(R.id.movieRuntime)            TextView mRuntime;
+    @InjectView(R.id.movieGenres)             TextView mGenres;
+    @InjectView(R.id.startYoutubeIntent)      Button mYoutubeIntent;
+    @InjectView(R.id.startImdbIntent)         Button mImdbIntent;
+    @InjectView(R.id.layoutShowMore)          LinearLayout mLayout;
+    @InjectView(R.id.movieActors)             TextView mActors;
+    @InjectView(R.id.movieDirectors)          TextView mDirectors;
+    @InjectView(R.id.startTraktIntent)        Button mTraktIntent;
+    @InjectView(R.id.movieRating)             TextView mRating;
+    @InjectView(R.id.movieReleaseYear)        TextView mReleaseYear;
+    @InjectView(R.id.startTraktComments)      Button mTraktCommentsActivity;
+    @InjectView(R.id.traktWatchlist)          Button mWatchlist;
+    @InjectView(R.id.startTraktRelatedMovies) Button mRelatedMovies;
 
     private Context getContext() { return this;}
 
@@ -67,26 +69,9 @@ public class DetailedMovieActivity extends BaseActivity
 
     private void Initialize()
     {
+        ButterKnife.inject(this);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         Intent intent = getIntent();
-
-        mLayout = (LinearLayout) findViewById(R.id.layoutShowMore);
-        mProgressBar = (ProgressBar) findViewById(R.id.progressIndicator);
-        mOverview = (TextView) findViewById(R.id.movieOverview);
-        mTitle = (TextView) findViewById(R.id.movieTitle);
-        mPoster = (ImageView) findViewById(R.id.moviePoster);
-        mRuntime = (TextView) findViewById(R.id.movieRuntime);
-        mGenres = (TextView) findViewById(R.id.movieGenres);
-        mYoutubeIntent = (Button) findViewById(R.id.startYoutubeIntent);
-        mImdbIntent = (Button) findViewById(R.id.startImdbIntent);
-        mActors = (TextView) findViewById(R.id.movieActors);
-        mDirectors = (TextView) findViewById(R.id.movieDirectors);
-        mTraktIntent = (Button) findViewById(R.id.startTraktIntent);
-        mRating = (TextView) findViewById(R.id.movieRating);
-        mReleaseYear = (TextView) findViewById(R.id.movieReleaseYear);
-        mTraktCommentsActivity = (Button) findViewById(R.id.startTraktComments);
-        mWatchlist = (Button) findViewById(R.id.traktWatchlist);
-        mRelatedMovies = (Button) findViewById(R.id.startTraktRelatedMovies);
 
         String movieId = intent.getStringExtra(TrendingMoviesFragment.EXTRA_MOVIEID);
         String moviePoster = intent.getStringExtra(TrendingMoviesFragment.EXTRA_MOVIEPOSTER);

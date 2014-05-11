@@ -9,11 +9,13 @@ import retrofit.client.ApacheClient;
  */
 public class RetrofitUtil
 {
-    public static final String TraktApiUrl = "http://api.trakt.tv";
-    public static final String TraktApiKey = "f0e3af66061e47b3243e25ed7b6443ca";
+    private static final String TraktApiUrl = "http://api.trakt.tv";
+    private static final String TraktApiKey = "f0e3af66061e47b3243e25ed7b6443ca";
 
-    public static final String TvdbApiUrl = "http://thetvdb.com/api";
-    public static final String TvdbApiKey = "9A96DA217CEB03E7";
+    private static final String TvdbApiUrl = "http://thetvdb.com/api";
+    private static final String TvdbApiKey = "9A96DA217CEB03E7";
+
+    private static final String ApisUrl = "http://apis.is";
 
     public static RestAdapter RetrofitRestAdapterInstance()
     {
@@ -51,6 +53,13 @@ public class RetrofitUtil
                 .setConverter(new SimpleXMLConverter())
                 .setRequestInterceptor(requestInterceptor)
                 .setClient(new ApacheClient())
+                .build();
+    }
+
+    public static RestAdapter RetrofitApisInstance()
+    {
+        return new RestAdapter.Builder()
+                .setEndpoint(ApisUrl)
                 .build();
     }
 }

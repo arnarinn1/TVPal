@@ -1,7 +1,6 @@
 package is.gui.movies;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,6 +17,8 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import is.gui.base.TraktThumbnailSize;
 import is.gui.base.BaseFragment;
 import is.contracts.datacontracts.trakt.TraktMovieData;
@@ -37,18 +38,17 @@ public class TrendingMoviesFragment extends BaseFragment implements AdapterView.
     public static final String EXTRA_MOVIEID = "is.activites.movieActivities.MOVIEID";
     public static final String EXTRA_MOVIEPOSTER = "is.activites.movieActivities.MOVIEPOSTER";
 
-    private Context mContext;
-    private GridView mGridView;
+    @InjectView(R.id.trendingTrakt)     GridView mGridView;
+    @InjectView(R.id.progressIndicator) ProgressBar mProgressBar;
+    @InjectView(R.id.traktNoResults)    TextView mNoResults;
+
     private TraktMoviesAdapter mAdapter;
-    private ProgressBar mProgressBar;
-    private TextView mNoResults;
 
     public TrendingMoviesFragment() {}
 
     public static TrendingMoviesFragment newInstance()
     {
         TrendingMoviesFragment fragment = new TrendingMoviesFragment();
-
         fragment.setRetainInstance(true);
         return fragment;
     }
@@ -57,11 +57,8 @@ public class TrendingMoviesFragment extends BaseFragment implements AdapterView.
     public void onActivityCreated(Bundle savedInstanceState)
     {
         super.onActivityCreated(savedInstanceState);
-        mContext = activity.getContext();
-        mGridView = (GridView) getView().findViewById(R.id.trendingTrakt);
+
         mGridView.setOnItemClickListener(this);
-        mProgressBar = (ProgressBar) getView().findViewById(R.id.progressIndicator);
-        mNoResults = (TextView) getView().findViewById(R.id.traktNoResults);
 
         registerForContextMenu(mGridView);
 
@@ -74,7 +71,9 @@ public class TrendingMoviesFragment extends BaseFragment implements AdapterView.
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        return inflater.inflate(R.layout.fragment_trakt_trending, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_trakt_trending, container, false);
+        ButterKnife.inject(this, rootView);
+        return rootView;
     }
 
     @Override
@@ -83,11 +82,11 @@ public class TrendingMoviesFragment extends BaseFragment implements AdapterView.
         TraktMovieData data = mAdapter.getItem(position);
         String posterUrl = StringUtil.formatTrendingPosterUrl(data.getImage().getPoster(), TraktThumbnailSize.Medium);
 
-        Intent intent = new Intent(mContext, DetailedMovieActivity.class);
+        Intent intent = new Intent(activity.getContext(), DetailedMovieActivity.class);
         intent.putExtra(EXTRA_MOVIEID, data.getImdbId());
         intent.putExtra(EXTRA_MOVIEPOSTER, posterUrl);
         startActivity(intent);
-        ((Activity)mContext).overridePendingTransition(R.anim.fade_in_activity, R.anim.fade_out_activity);
+        ((Activity)activity.getContext()).overridePendingTransition(R.anim.fade_in_activity, R.anim.fade_out_activity);
     }
 
     @Override
@@ -116,10 +115,10 @@ public class TrendingMoviesFragment extends BaseFragment implements AdapterView.
         try
         {
             TraktMovieData movie = mAdapter.getItem(position);
-            DbMovies db = new DbMovies(mContext);
+            DbMovies db = new DbMovies(activity.getContext());
             db.AddMovieToWatchList(movie);
 
-            Toast.makeText(mContext, String.format("Added %s to your watchlist", movie.getTitle()), Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity.getContext(), String.format("Added %s to your watchlist", movie.getTitle()), Toast.LENGTH_SHORT).show();
         }
         catch (Exception ex)
         {
@@ -138,7 +137,7 @@ public class TrendingMoviesFragment extends BaseFragment implements AdapterView.
             }
             else
             {
-                mAdapter = new TraktMoviesAdapter(mContext, R.layout.listview_trakt_movies, movies);
+                mAdapter = new TraktMoviesAdapter(activity.getContext(), R.layout.listview_trakt_movies, movies);
                 mGridView.setAdapter(mAdapter);
                 SetViewVisibility(View.GONE, View.GONE);
             }

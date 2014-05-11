@@ -15,6 +15,8 @@ import android.widget.TextView;
 import com.slidinglayer.SlidingLayer;
 import com.squareup.picasso.Picasso;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import is.gui.base.TraktThumbnailSize;
 import is.gui.base.BaseFragmentActivity;
 import is.handlers.adapters.WatchListAdapter;
@@ -24,15 +26,16 @@ import is.utilities.StringUtil;
 
 public class WatchlistActivity extends BaseFragmentActivity implements AdapterView.OnItemClickListener
 {
-    private WatchListAdapter mAdapter;
-    private GridView mGridView;
-    private SlidingLayer mSlidingLayer;
-    private ImageView mWatchListPoster;
-    private TextView mWatchlistDesc;
-    private Button mCloseButton;
-    private TextView mEmptyWatchList;
+
+    @InjectView(R.id.trendingTrakt)  GridView mGridView;
+    @InjectView(R.id.slidingLayer1)  SlidingLayer mSlidingLayer;
+    @InjectView(R.id.watchlistTitle) ImageView mWatchListPoster;
+    @InjectView(R.id.watchListDesc)  TextView mWatchlistDesc;
+    @InjectView(R.id.closeSlider)    Button mCloseButton;
+    @InjectView(R.id.emptyWatchList) TextView mEmptyWatchList;
 
     private DbMovies mDb;
+    private WatchListAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -45,10 +48,10 @@ public class WatchlistActivity extends BaseFragmentActivity implements AdapterVi
 
     private void Initialize()
     {
+        ButterKnife.inject(this);
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
-        AttachViews();
-        AttachEventListeners();
+        mGridView.setOnItemClickListener(this);
 
         registerForContextMenu(mGridView);
         mDb = new DbMovies(this);
@@ -144,20 +147,5 @@ public class WatchlistActivity extends BaseFragmentActivity implements AdapterVi
             default:
                 return super.onKeyDown(keyCode, event);
         }
-    }
-
-    private void AttachViews()
-    {
-        mGridView = (GridView) findViewById(R.id.trendingTrakt);
-        mSlidingLayer = (SlidingLayer) findViewById(R.id.slidingLayer1);
-        mWatchListPoster = (ImageView) findViewById(R.id.watchlistTitle);
-        mWatchlistDesc = (TextView) findViewById(R.id.watchListDesc);
-        mCloseButton = (Button) findViewById(R.id.closeSlider);
-        mEmptyWatchList = (TextView) findViewById(R.id.emptyWatchList);
-    }
-
-    private void AttachEventListeners()
-    {
-        mGridView.setOnItemClickListener(this);
     }
 }

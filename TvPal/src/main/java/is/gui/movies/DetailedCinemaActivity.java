@@ -12,7 +12,7 @@ import is.tvpal.R;
 
 public class DetailedCinemaActivity extends BaseActivity
 {
-    private CinemaMovie _movie;
+    private CinemaMovie mMovie;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -29,13 +29,12 @@ public class DetailedCinemaActivity extends BaseActivity
 
         InitializeDetailsButton();
 
-        Intent intent = getIntent();
-        _movie = (CinemaMovie) intent.getSerializableExtra(CinemaActivity.EXTRA_MOVIE);
+        mMovie = (CinemaMovie) getIntent().getSerializableExtra(CinemaActivity.EXTRA_MOVIE);
 
-        setTitle(_movie.getTitle());
+        setTitle(mMovie.getTitle());
 
         ExpandableListView eListView = (ExpandableListView) findViewById(R.id.expandleMovie);
-        eListView.setAdapter(new TheatreExpandableListAdapter(this, _movie.getShowtimes()));
+        eListView.setAdapter(new TheatreExpandableListAdapter(this, mMovie.getShowtimes()));
     }
 
     private void InitializeDetailsButton()
@@ -47,8 +46,8 @@ public class DetailedCinemaActivity extends BaseActivity
             public void onClick(View view)
             {
                 Intent intent = new Intent(getApplicationContext(), DetailedMovieActivity.class);
-                intent.putExtra(TrendingMoviesFragment.EXTRA_MOVIEID, TrimImdbLink(_movie.getImdbLink()));
-                intent.putExtra(TrendingMoviesFragment.EXTRA_MOVIEPOSTER, _movie.getImageUrl());
+                intent.putExtra(TrendingMoviesFragment.EXTRA_MOVIEID, TrimImdbLink(mMovie.getImdbLink()));
+                intent.putExtra(TrendingMoviesFragment.EXTRA_MOVIEPOSTER, mMovie.getImageUrl());
                 startActivity(intent);
             }
         });

@@ -10,12 +10,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.haarman.listviewanimations.swinginadapters.prepared.ScaleInAnimationAdapter;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import is.contracts.datacontracts.cinema.CinemaResults;
 import is.gui.base.BaseActivity;
 import is.contracts.datacontracts.cinema.CinemaMovie;
 import is.handlers.adapters.CinemaAdapter;
 import is.tvpal.R;
 import is.webservices.ApisService;
+import is.webservices.RetrofitUtil;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -24,13 +27,12 @@ import retrofit.client.Response;
 public class CinemaActivity extends BaseActivity implements AdapterView.OnItemClickListener
 {
     public static final String EXTRA_MOVIE = "is.activites.cinemaActivities.MOVIE";
-    public static final String ApisUrl = "http://apis.is";
+
+    @InjectView(R.id.cinemaSchedules)   ListView mListView;
+    @InjectView(R.id.progressIndicator) ProgressBar mProgressBar;
+    @InjectView(R.id.cinemaNoResults)   TextView mNoResults;
 
     private CinemaAdapter mAdapter;
-    private ListView mListView;
-    private ProgressBar mProgressBar;
-    private TextView mNoResults;
-
     private Context getContext() { return this;}
 
     @Override
@@ -44,17 +46,13 @@ public class CinemaActivity extends BaseActivity implements AdapterView.OnItemCl
 
     private void Initialize()
     {
-        mListView = (ListView) findViewById(R.id.cinemaSchedules);
+        ButterKnife.inject(this);
+
         mListView.setOnItemClickListener(this);
-        mProgressBar = (ProgressBar) findViewById(R.id.progressIndicator);
-        mNoResults = (TextView) findViewById(R.id.cinemaNoResults);
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(ApisUrl)
-                .build();
-
+        RestAdapter restAdapter = RetrofitUtil.RetrofitApisInstance();
         ApisService service = restAdapter.create(ApisService.class);
         service.getMovies("cinema", cinemaCallback);
     }
