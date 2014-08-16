@@ -1,7 +1,6 @@
 package is.gui.movies;
 
 import android.content.Intent;
-import android.content.Context;
 import android.os.Bundle;
 import android.app.Activity;
 import android.util.Log;
@@ -30,8 +29,8 @@ import is.handlers.adapters.TraktMoviesAdapter;
 import is.handlers.database.DbMovies;
 import is.tvpal.R;
 import is.utilities.StringUtil;
+import is.webservices.ITraktService;
 import is.webservices.RetrofitUtil;
-import is.webservices.TraktService;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -49,7 +48,7 @@ public class SearchMovieFragment extends BaseFragment implements AdapterView.OnI
     @InjectView(R.id.traktMovieResults)      GridView mGridView;
     @InjectView(R.id.traktProgressIndicator) ProgressBar mProgressBar;
 
-    private TraktService mService;
+    private ITraktService mService;
     private TraktMoviesAdapter mAdapter;
     private DbMovies mCursor;
 
@@ -73,8 +72,8 @@ public class SearchMovieFragment extends BaseFragment implements AdapterView.OnI
 
         registerForContextMenu(mGridView);
 
-        RestAdapter restAdapter = RetrofitUtil.RetrofitRestAdapterInstance();
-        mService = restAdapter.create(TraktService.class);
+        RestAdapter restAdapter = RetrofitUtil.TraktRestAdapterInstance();
+        mService = restAdapter.create(ITraktService.class);
 
         InitializeEditTextSearch();
     }

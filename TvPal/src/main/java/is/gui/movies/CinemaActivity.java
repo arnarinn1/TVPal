@@ -17,7 +17,7 @@ import is.gui.base.BaseActivity;
 import is.contracts.datacontracts.cinema.CinemaMovie;
 import is.handlers.adapters.CinemaAdapter;
 import is.tvpal.R;
-import is.webservices.ApisService;
+import is.webservices.IApisService;
 import is.webservices.RetrofitUtil;
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -53,7 +53,7 @@ public class CinemaActivity extends BaseActivity implements AdapterView.OnItemCl
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
         RestAdapter restAdapter = RetrofitUtil.RetrofitApisInstance();
-        ApisService service = restAdapter.create(ApisService.class);
+        IApisService service = restAdapter.create(IApisService.class);
         service.getMovies("cinema", cinemaCallback);
     }
 

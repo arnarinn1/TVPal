@@ -15,8 +15,8 @@ import is.gui.base.BaseActivity;
 import is.contracts.datacontracts.trakt.TraktMovieDetailedData;
 import is.handlers.adapters.TraktRelatedMoviesAdapter;
 import is.tvpal.R;
+import is.webservices.ITraktService;
 import is.webservices.RetrofitUtil;
-import is.webservices.TraktService;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -46,8 +46,8 @@ public class RelatedMovieActivity extends BaseActivity
         Intent intent = getIntent();
         String imdbId = intent.getStringExtra(DetailedMovieActivity.EXTRA_MOVIEID);
 
-        RestAdapter restAdapter = RetrofitUtil.RetrofitRestAdapterInstance();
-        TraktService service = restAdapter.create(TraktService.class);
+        RestAdapter restAdapter = RetrofitUtil.TraktRestAdapterInstance();
+        ITraktService service = restAdapter.create(ITraktService.class);
 
         service.getRelatedMovies(imdbId, relatedMoviesCallback);
     }

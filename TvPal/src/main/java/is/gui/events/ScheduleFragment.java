@@ -1,4 +1,4 @@
-package is.gui.schedules;
+package is.gui.events;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -21,10 +21,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-import is.gui.base.BaseFragment;
 import is.contracts.datacontracts.EventData;
 import is.gui.base.BaseScheduleFragment;
-import is.gui.base.IActivity;
 import is.handlers.adapters.EventAdapter;
 import is.tvpal.R;
 
@@ -32,6 +30,7 @@ public class ScheduleFragment extends BaseScheduleFragment implements AdapterVie
 {
     public static final String EXTRA_SCHEDULE_DAY = "is.activites.scheduleActivites.SCHEDULE_DAY";
     public static final String EXTRA_IMG_RESOURCE = "is.activites.scheduleActivites.IMGRESOURCE";
+    public static final String EXTRA_TAB_TITLE = "is.activites.scheduleActivites.TAB_TITLE";
 
     private EventAdapter mAdapter;
     private Context mContext;

@@ -15,8 +15,8 @@ import is.gui.base.BaseFragment;
 import is.contracts.datacontracts.trakt.TraktEpisodeData;
 import is.handlers.adapters.TraktEpisodeAdapter;
 import is.tvpal.R;
+import is.webservices.ITraktService;
 import is.webservices.RetrofitUtil;
-import is.webservices.TraktService;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -53,8 +53,8 @@ public class TrendingEpisodesFragment extends BaseFragment
         mNoResults = (TextView) getView().findViewById(R.id.traktNoResults);
         mGridView = (GridView) getView().findViewById(R.id.trendingTrakt);
 
-        RestAdapter restAdapter = RetrofitUtil.RetrofitRestAdapterInstance();
-        TraktService service = restAdapter.create(TraktService.class);
+        RestAdapter restAdapter = RetrofitUtil.TraktRestAdapterInstance();
+        ITraktService service = restAdapter.create(ITraktService.class);
 
         service.getTrendingShows(trendingShowsCallback);
     }

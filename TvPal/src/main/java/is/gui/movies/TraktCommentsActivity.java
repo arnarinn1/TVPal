@@ -15,8 +15,8 @@ import is.gui.base.BaseActivity;
 import is.contracts.datacontracts.trakt.TraktComment;
 import is.handlers.adapters.TraktCommentAdapter;
 import is.tvpal.R;
+import is.webservices.ITraktService;
 import is.webservices.RetrofitUtil;
-import is.webservices.TraktService;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -60,8 +60,8 @@ public class TraktCommentsActivity extends BaseActivity
         String imdbId = intent.getStringExtra(EXTRA_ImdbId);
         String type = intent.getStringExtra(EXTRA_TYPE);
 
-        RestAdapter restAdapter = RetrofitUtil.RetrofitRestAdapterInstance();
-        TraktService service = restAdapter.create(TraktService.class);
+        RestAdapter restAdapter = RetrofitUtil.TraktRestAdapterInstance();
+        ITraktService service = restAdapter.create(ITraktService.class);
         service.getComments(type, imdbId, commentsCallback);
     }
 

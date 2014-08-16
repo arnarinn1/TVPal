@@ -12,8 +12,8 @@ import java.util.List;
 import is.contracts.datacontracts.tvdb.Episode;
 import is.contracts.datacontracts.tvdb.ShowData;
 import is.handlers.database.DbEpisodes;
+import is.webservices.ITvdbService;
 import is.webservices.RetrofitUtil;
-import is.webservices.TvdbService;
 import retrofit.RestAdapter;
 
 public class TvdbSeriesUpdateWorker extends AsyncTask<Integer, Void, Boolean>
@@ -63,7 +63,7 @@ public class TvdbSeriesUpdateWorker extends AsyncTask<Integer, Void, Boolean>
         int lastLocalUpdate = new DbEpisodes(mContext).GetSeriesLastUpdate(seriesId);
         //int lastLocalUpdate = 1391882207; //just for testing
 
-        TvdbService service = restAdapter.create(TvdbService.class);
+        ITvdbService service = restAdapter.create(ITvdbService.class);
         ShowData series = service.getSeries(seriesId);
 
         List<Episode>  episodesToUpdate = new ArrayList<Episode>();

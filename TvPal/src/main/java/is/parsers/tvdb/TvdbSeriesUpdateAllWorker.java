@@ -13,8 +13,8 @@ import is.contracts.datacontracts.tvdb.Episode;
 import is.contracts.datacontracts.tvdb.ShowData;
 import is.handlers.database.DbEpisodes;
 import is.utilities.ConnectionListener;
+import is.webservices.ITvdbService;
 import is.webservices.RetrofitUtil;
-import is.webservices.TvdbService;
 import retrofit.RestAdapter;
 
 /**
@@ -63,7 +63,7 @@ public class TvdbSeriesUpdateAllWorker extends AsyncTask<Integer, Void, Boolean>
     private Boolean GetEpisodes()
     {
         RestAdapter restAdapter = RetrofitUtil.RestAdapterXMLInstance();
-        TvdbService service = restAdapter.create(TvdbService.class);
+        ITvdbService service = restAdapter.create(ITvdbService.class);
 
         DbEpisodes db = new DbEpisodes(mContext);
         ConnectionListener network = new ConnectionListener(mContext);

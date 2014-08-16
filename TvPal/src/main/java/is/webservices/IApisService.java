@@ -5,7 +5,7 @@ import retrofit.Callback;
 import retrofit.http.GET;
 import retrofit.http.Path;
 
-public interface ApisService
+public interface IApisService
 {
     @GET("/{endpoint}")
     void getMovies(@Path("endpoint") String endpoint,

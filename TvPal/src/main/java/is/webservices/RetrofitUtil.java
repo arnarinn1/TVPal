@@ -17,7 +17,9 @@ public class RetrofitUtil
 
     private static final String ApisUrl = "http://apis.is";
 
-    public static RestAdapter RetrofitRestAdapterInstance()
+    private static final String ScheduleUrl = "http://arnarh.com/tvpal/public";
+
+    public static RestAdapter TraktRestAdapterInstance()
     {
         RequestInterceptor requestInterceptor = new RequestInterceptor() {
             @Override
@@ -60,6 +62,13 @@ public class RetrofitUtil
     {
         return new RestAdapter.Builder()
                 .setEndpoint(ApisUrl)
+                .build();
+    }
+
+    public static RestAdapter ScheduleRestAdapterInstance()
+    {
+        return new RestAdapter.Builder()
+                .setEndpoint(ScheduleUrl)
                 .build();
     }
 }

@@ -19,8 +19,8 @@ import is.contracts.datacontracts.tvdb.SeriesSearch;
 import is.gui.base.BaseFragment;
 import is.handlers.adapters.SearchShowAdapter;
 import is.tvpal.R;
+import is.webservices.ITvdbService;
 import is.webservices.RetrofitUtil;
-import is.webservices.TvdbService;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -39,7 +39,7 @@ public class SearchShowFragment extends BaseFragment
     private Context mContext;
     private ProgressBar mProgressBar;
 
-    private TvdbService mService;
+    private ITvdbService mService;
 
     public SearchShowFragment() {}
 
@@ -62,7 +62,7 @@ public class SearchShowFragment extends BaseFragment
         mListView = (ListView) getView().findViewById(R.id.lvId);
 
         RestAdapter restAdapter = RetrofitUtil.RestAdapterXMLInstance();
-        mService = restAdapter.create(TvdbService.class);
+        mService = restAdapter.create(ITvdbService.class);
 
         InitializeEditTextSearch();
     }

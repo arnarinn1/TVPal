@@ -27,8 +27,8 @@ import is.tvpal.R;
 import is.utilities.ExternalIntents;
 import is.utilities.PictureTask;
 import is.utilities.StringUtil;
+import is.webservices.ITraktService;
 import is.webservices.RetrofitUtil;
-import is.webservices.TraktService;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -76,8 +76,8 @@ public class DetailedMovieActivity extends BaseActivity
         String movieId = intent.getStringExtra(TrendingMoviesFragment.EXTRA_MOVIEID);
         String moviePoster = intent.getStringExtra(TrendingMoviesFragment.EXTRA_MOVIEPOSTER);
 
-        RestAdapter restAdapter = RetrofitUtil.RetrofitRestAdapterInstance();
-        TraktService service = restAdapter.create(TraktService.class);
+        RestAdapter restAdapter = RetrofitUtil.TraktRestAdapterInstance();
+        ITraktService service = restAdapter.create(ITraktService.class);
 
         service.getMovie(movieId, movieCallback);
 

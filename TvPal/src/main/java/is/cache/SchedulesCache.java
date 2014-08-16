@@ -1,4 +1,4 @@
-package is.parsers.cache;
+package is.cache;
 
 import android.content.Context;
 import android.content.SharedPreferences;

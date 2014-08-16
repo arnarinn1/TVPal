@@ -7,8 +7,8 @@ import android.widget.Toast;
 import is.contracts.datacontracts.tvdb.ShowData;
 import is.handlers.database.DbEpisodes;
 import is.utilities.PictureTask;
+import is.webservices.ITvdbService;
 import is.webservices.RetrofitUtil;
-import is.webservices.TvdbService;
 import retrofit.RestAdapter;
 
 public class TvdbSeriesWorker extends AsyncTask<Integer, Void, Boolean>
@@ -41,7 +41,7 @@ public class TvdbSeriesWorker extends AsyncTask<Integer, Void, Boolean>
     {
         RestAdapter restAdapter = RetrofitUtil.RestAdapterXMLInstance();
 
-        TvdbService service = restAdapter.create(TvdbService.class);
+        ITvdbService service = restAdapter.create(ITvdbService.class);
         ShowData series = service.getSeries(seriesId);
 
         try

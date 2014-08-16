@@ -25,9 +25,10 @@ import is.contracts.datacontracts.trakt.TraktMovieData;
 import is.handlers.adapters.TraktMoviesAdapter;
 import is.handlers.database.DbMovies;
 import is.tvpal.R;
+import is.utilities.ListUtil;
 import is.utilities.StringUtil;
+import is.webservices.ITraktService;
 import is.webservices.RetrofitUtil;
-import is.webservices.TraktService;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -62,8 +63,8 @@ public class TrendingMoviesFragment extends BaseFragment implements AdapterView.
 
         registerForContextMenu(mGridView);
 
-        RestAdapter restAdapter = RetrofitUtil.RetrofitRestAdapterInstance();
-        TraktService service = restAdapter.create(TraktService.class);
+        RestAdapter restAdapter = RetrofitUtil.TraktRestAdapterInstance();
+        ITraktService service = restAdapter.create(ITraktService.class);
 
         service.getTrendingMovies(trendingMoviesCallback);
     }
@@ -137,6 +138,7 @@ public class TrendingMoviesFragment extends BaseFragment implements AdapterView.
             }
             else
             {
+                ListUtil.FilterGenre(movies, "Horror");
                 mAdapter = new TraktMoviesAdapter(activity.getContext(), R.layout.listview_trakt_movies, movies);
                 mGridView.setAdapter(mAdapter);
                 SetViewVisibility(View.GONE, View.GONE);

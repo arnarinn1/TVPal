@@ -10,7 +10,7 @@ import retrofit.Callback;
 import retrofit.http.GET;
 import retrofit.http.Path;
 
-public interface TraktService
+public interface ITraktService
 {
     @GET("/shows/trending.json/{apiKey}")
     void getTrendingShows(Callback<List<TraktEpisodeData>> callback);

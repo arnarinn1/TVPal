@@ -22,19 +22,9 @@
             </intent-filter>
         </activity>1
         <activity
-            android:name="is.gui.schedules.DisplayStod2Activity"
+            android:name="is.gui.events.EventActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_activity_display_stod2" >
-        </activity>
-        <activity
-            android:name="is.gui.schedules.DisplayRuvActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/title_activity_display_ruv" >
-        </activity>
-        <activity
-            android:name="is.gui.schedules.DisplaySkjarinnActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/title_activity_display_skjarinn" >
         </activity>
         <activity
             android:name="is.gui.shows.MyShowsActivity"

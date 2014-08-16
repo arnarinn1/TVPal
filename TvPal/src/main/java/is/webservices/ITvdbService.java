@@ -7,7 +7,7 @@ import retrofit.http.GET;
 import retrofit.http.Path;
 import retrofit.http.Query;
 
-public interface TvdbService
+public interface ITvdbService
 {
     @GET("/{apiKey}/series/{seriesId}/{type}")
     ShowData getSeries(@Path("seriesId") int seriesId);

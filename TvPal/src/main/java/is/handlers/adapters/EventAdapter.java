@@ -12,33 +12,18 @@ import java.util.List;
 import is.contracts.datacontracts.EventData;
 import is.tvpal.R;
 
-/**
- * Created by Svavar
- *
- * This class implements an Adapter that can be used in both ListView
- * (by implementing the specialized ListAdapter interface}
- * and Spinner (by implementing the specialized SpinnerAdapter interface.
- * It extends BaseAdapter.
- *
- * @see    android.widget.BaseAdapter
- */
 public class EventAdapter extends BaseAdapter
 {
-    private Context context;
-    private int layoutResourceId;
-    private List<EventData> schedule;
+    private Context mContext;
+    private int mLayoutResourceId;
+    private List<EventData> mEvents;
     private int mImageResourceId;
 
-    /**
-        @param context This is the current context of the application activity
-        @param layoutResourceId The id of the xml layout
-        @param schedule List of EventData
-     */
-    public EventAdapter(Context context, int layoutResourceId, List<EventData> schedule, int imageResourceId)
+    public EventAdapter(Context context, int layoutResourceId, List<EventData> events, int imageResourceId)
     {
-        this.context = context;
-        this.layoutResourceId = layoutResourceId;
-        this.schedule = schedule;
+        this.mContext = context;
+        this.mLayoutResourceId = layoutResourceId;
+        this.mEvents = events;
         this.mImageResourceId = imageResourceId;
     }
 
@@ -58,8 +43,8 @@ public class EventAdapter extends BaseAdapter
 
         if(row == null)
         {
-            LayoutInflater inflater = ((Activity)context).getLayoutInflater();
-            row = inflater.inflate(layoutResourceId, parent, false);
+            LayoutInflater inflater = ((Activity)mContext).getLayoutInflater();
+            row = inflater.inflate(mLayoutResourceId, parent, false);
 
             holder = new EventHolder();
             holder.imgIcon = (ImageView)row.findViewById(R.id.imgIcon);
@@ -87,18 +72,18 @@ public class EventAdapter extends BaseAdapter
     @Override
     public int getCount()
     {
-        return (schedule == null) ? 0 : schedule.size();
+        return (mEvents == null) ? 0 : mEvents.size();
     }
 
     @Override
     public EventData getItem(int position)
     {
-        return schedule.get(position);
+        return mEvents.get(position);
     }
 
     @Override
     public long getItemId(int position)
     {
-        return schedule.indexOf(getItem(position));
+        return mEvents.indexOf(getItem(position));
     }
 }
