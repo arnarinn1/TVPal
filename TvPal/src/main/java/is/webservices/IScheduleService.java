@@ -2,7 +2,7 @@ package is.webservices;
 
 import java.util.List;
 
-import is.contracts.datacontracts.EventData;
+import is.datacontracts.EventData;
 import retrofit.Callback;
 import retrofit.http.GET;
 import retrofit.http.Path;

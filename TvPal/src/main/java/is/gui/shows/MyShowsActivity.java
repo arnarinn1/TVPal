@@ -21,8 +21,8 @@ import is.gui.base.BaseActivity;
 import is.gui.dialogs.RemoveShowDialog;
 import is.handlers.database.DbEpisodes;
 import is.handlers.adapters.MyShowsAdapter;
-import is.parsers.tvdb.TvdbSeriesUpdateAllWorker;
-import is.parsers.tvdb.TvdbSeriesUpdateWorker;
+import is.tvdb.TvdbSeriesUpdateAllWorker;
+import is.tvdb.TvdbSeriesUpdateWorker;
 import is.tvpal.R;
 import is.utilities.ConnectionListener;
 

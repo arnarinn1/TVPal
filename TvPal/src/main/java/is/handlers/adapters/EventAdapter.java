@@ -9,7 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import java.util.List;
-import is.contracts.datacontracts.EventData;
+import is.datacontracts.EventData;
 import is.tvpal.R;
 
 public class EventAdapter extends BaseAdapter

@@ -12,7 +12,7 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import is.gui.base.BaseActivity;
-import is.contracts.datacontracts.trakt.TraktMovieDetailedData;
+import is.datacontracts.trakt.TraktMovieDetailedData;
 import is.handlers.adapters.TraktRelatedMoviesAdapter;
 import is.tvpal.R;
 import is.webservices.ITraktService;

@@ -13,7 +13,7 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import is.gui.base.BaseFragment;
-import is.contracts.datacontracts.EpisodeData;
+import is.datacontracts.EpisodeData;
 import is.handlers.database.DbEpisodes;
 import is.tvpal.R;
 

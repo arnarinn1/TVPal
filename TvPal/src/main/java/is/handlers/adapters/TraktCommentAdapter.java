@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import java.util.List;
-import is.contracts.datacontracts.trakt.TraktComment;
+import is.datacontracts.trakt.TraktComment;
 import is.tvpal.R;
 
 public class TraktCommentAdapter extends BaseAdapter

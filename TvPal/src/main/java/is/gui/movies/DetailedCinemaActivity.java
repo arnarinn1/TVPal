@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import is.gui.base.BaseActivity;
-import is.contracts.datacontracts.cinema.CinemaMovie;
+import is.datacontracts.cinema.CinemaMovie;
 import is.handlers.adapters.TheatreExpandableListAdapter;
 import is.tvpal.R;
 

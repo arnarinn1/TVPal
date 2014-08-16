@@ -11,12 +11,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import is.contracts.datacontracts.EpisodeData;
-import is.contracts.datacontracts.SeriesData;
-import is.contracts.datacontracts.StatisticData;
-import is.contracts.datacontracts.tvdb.Episode;
-import is.contracts.datacontracts.tvdb.Series;
-import is.utilities.DateUtil;
+
+import is.datacontracts.tvdb.Episode;
+import is.datacontracts.tvdb.Series;
 
 /**
  * A class to work with Episode Data

@@ -2,8 +2,7 @@ package is.utilities;
 
 import java.util.List;
 
-import is.contracts.datacontracts.trakt.TraktPeople;
-import is.contracts.datacontracts.trakt.TraktPerson;
+import is.datacontracts.trakt.TraktPerson;
 
 /**
  * Created by Arnar on 18.11.2013.

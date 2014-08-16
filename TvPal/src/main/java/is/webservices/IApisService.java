@@ -1,6 +1,6 @@
 package is.webservices;
 
-import is.contracts.datacontracts.cinema.CinemaResults;
+import is.datacontracts.cinema.CinemaResults;
 import retrofit.Callback;
 import retrofit.http.GET;
 import retrofit.http.Path;

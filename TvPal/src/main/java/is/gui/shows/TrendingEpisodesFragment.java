@@ -12,7 +12,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import is.gui.base.BaseFragment;
-import is.contracts.datacontracts.trakt.TraktEpisodeData;
+import is.datacontracts.trakt.TraktEpisodeData;
 import is.handlers.adapters.TraktEpisodeAdapter;
 import is.tvpal.R;
 import is.webservices.ITraktService;

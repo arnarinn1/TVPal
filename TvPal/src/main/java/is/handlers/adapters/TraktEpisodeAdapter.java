@@ -14,10 +14,10 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
-import is.contracts.datacontracts.trakt.TraktEpisodeData;
+import is.datacontracts.trakt.TraktEpisodeData;
 import is.gui.base.TraktThumbnailSize;
 import is.handlers.database.DbEpisodes;
-import is.parsers.tvdb.TvdbSeriesWorker;
+import is.tvdb.TvdbSeriesWorker;
 import is.tvpal.R;
 import is.utilities.StringUtil;
 

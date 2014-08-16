@@ -3,7 +3,7 @@ package is.utilities;
 import java.util.ArrayList;
 import java.util.List;
 
-import is.contracts.datacontracts.trakt.TraktMovieData;
+import is.datacontracts.trakt.TraktMovieData;
 
 /**
  * Created by Arnar on 11.5.2014.

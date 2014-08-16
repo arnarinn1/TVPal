@@ -12,9 +12,9 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import is.contracts.datacontracts.tvdb.SeriesMinimal;
+import is.datacontracts.tvdb.SeriesMinimal;
 import is.handlers.database.DbEpisodes;
-import is.parsers.tvdb.TvdbSeriesWorker;
+import is.tvdb.TvdbSeriesWorker;
 import is.tvpal.R;
 
 /**

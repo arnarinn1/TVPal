@@ -12,7 +12,7 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import is.gui.base.BaseActivity;
-import is.contracts.datacontracts.trakt.TraktComment;
+import is.datacontracts.trakt.TraktComment;
 import is.handlers.adapters.TraktCommentAdapter;
 import is.tvpal.R;
 import is.webservices.ITraktService;

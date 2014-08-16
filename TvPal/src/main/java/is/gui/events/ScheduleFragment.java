@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-import is.contracts.datacontracts.EventData;
+import is.datacontracts.EventData;
 import is.gui.base.BaseScheduleFragment;
 import is.handlers.adapters.EventAdapter;
 import is.tvpal.R;

@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 import java.util.List;
-import is.contracts.datacontracts.cinema.CinemaShowtimes;
+import is.datacontracts.cinema.CinemaShowtimes;
 import is.tvpal.R;
 
 public class TheatreExpandableListAdapter extends BaseExpandableListAdapter {

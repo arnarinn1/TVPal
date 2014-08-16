@@ -15,7 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import is.contracts.datacontracts.tvdb.SeriesSearch;
+import is.datacontracts.tvdb.SeriesSearch;
 import is.gui.base.BaseFragment;
 import is.handlers.adapters.SearchShowAdapter;
 import is.tvpal.R;

@@ -1,7 +1,7 @@
 package is.webservices;
 
-import is.contracts.datacontracts.tvdb.SeriesSearch;
-import is.contracts.datacontracts.tvdb.ShowData;
+import is.datacontracts.tvdb.SeriesSearch;
+import is.datacontracts.tvdb.ShowData;
 import retrofit.Callback;
 import retrofit.http.GET;
 import retrofit.http.Path;

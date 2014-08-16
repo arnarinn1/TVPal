@@ -12,9 +12,9 @@ import com.haarman.listviewanimations.swinginadapters.prepared.ScaleInAnimationA
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import is.contracts.datacontracts.cinema.CinemaResults;
+import is.datacontracts.cinema.CinemaResults;
 import is.gui.base.BaseActivity;
-import is.contracts.datacontracts.cinema.CinemaMovie;
+import is.datacontracts.cinema.CinemaMovie;
 import is.handlers.adapters.CinemaAdapter;
 import is.tvpal.R;
 import is.webservices.IApisService;

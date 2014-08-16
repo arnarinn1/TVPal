@@ -21,7 +21,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import is.gui.base.TraktThumbnailSize;
 import is.gui.base.BaseFragment;
-import is.contracts.datacontracts.trakt.TraktMovieData;
+import is.datacontracts.trakt.TraktMovieData;
 import is.handlers.adapters.TraktMoviesAdapter;
 import is.handlers.database.DbMovies;
 import is.tvpal.R;

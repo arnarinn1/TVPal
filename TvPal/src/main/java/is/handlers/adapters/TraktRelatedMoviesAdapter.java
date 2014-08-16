@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
-import is.contracts.datacontracts.trakt.TraktMovieDetailedData;
+import is.datacontracts.trakt.TraktMovieDetailedData;
 import is.gui.base.TraktThumbnailSize;
 import is.tvpal.R;
 import is.utilities.StringUtil;

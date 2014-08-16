@@ -13,7 +13,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import is.contracts.datacontracts.trakt.TraktMovieData;
+import is.datacontracts.trakt.TraktMovieData;
 import is.gui.base.TraktThumbnailSize;
 import is.tvpal.R;
 import is.utilities.StringUtil;

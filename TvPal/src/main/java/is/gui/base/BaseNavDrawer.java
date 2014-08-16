@@ -17,9 +17,9 @@ import is.gui.events.EventActivity;
 import is.gui.shows.MyShowsActivity;
 import is.gui.shows.SearchShowsActivity;
 import is.gui.shows.UpcomingRecentActivity;
-import is.contracts.datacontracts.DrawerListData;
-import is.contracts.datacontracts.DrawerListHeader;
-import is.contracts.datacontracts.IDrawerItem;
+import is.datacontracts.DrawerListData;
+import is.datacontracts.DrawerListHeader;
+import is.datacontracts.IDrawerItem;
 import is.handlers.adapters.DrawerListAdapter;
 import is.tvpal.R;
 

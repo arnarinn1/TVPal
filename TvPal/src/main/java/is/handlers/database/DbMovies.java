@@ -10,7 +10,7 @@ import android.util.Log;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import is.contracts.datacontracts.trakt.TraktMovieData;
+import is.datacontracts.trakt.TraktMovieData;
 
 /**
  * Created by Arnar on 5.12.2013.

@@ -26,7 +26,7 @@ import java.util.Map;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import is.gui.MainActivity;
-import is.contracts.datacontracts.EventData;
+import is.datacontracts.EventData;
 import is.gui.base.BaseNavDrawer;
 import is.utilities.ConnectionListener;
 import is.utilities.DateUtil;

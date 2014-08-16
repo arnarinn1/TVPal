@@ -2,10 +2,10 @@ package is.webservices;
 
 import java.util.List;
 
-import is.contracts.datacontracts.trakt.TraktComment;
-import is.contracts.datacontracts.trakt.TraktEpisodeData;
-import is.contracts.datacontracts.trakt.TraktMovieData;
-import is.contracts.datacontracts.trakt.TraktMovieDetailedData;
+import is.datacontracts.trakt.TraktComment;
+import is.datacontracts.trakt.TraktEpisodeData;
+import is.datacontracts.trakt.TraktMovieData;
+import is.datacontracts.trakt.TraktMovieDetailedData;
 import retrofit.Callback;
 import retrofit.http.GET;
 import retrofit.http.Path;
