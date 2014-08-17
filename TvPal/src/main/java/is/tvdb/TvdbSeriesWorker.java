@@ -44,20 +44,6 @@ public class TvdbSeriesWorker extends AsyncTask<Integer, Void, Boolean>
         ITvdbService service = restAdapter.create(ITvdbService.class);
         ShowData series = service.getSeries(seriesId);
 
-        try
-        {
-            String posterUrl = String.format("http://thetvdb.com/banners/%s", series.getSeries().getPoster());
-            PictureTask pic = new PictureTask();
-            byte[] posterByteStream = pic.getByteStreamFromUrl(posterUrl);
-            series.getSeries().setPosterByteStream(posterByteStream);
-        }
-        catch (Exception ex)
-        {
-            ex.printStackTrace();
-            return false;
-        }
-
-        //TODO: Refactor InsertFullSeriesInfo to throw exceptions not catch them
         new DbEpisodes(mContext).InsertFullSeriesInfo(series.getEpisodes(), series.getSeries());
 
         return true;

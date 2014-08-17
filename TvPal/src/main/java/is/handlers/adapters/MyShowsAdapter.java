@@ -11,6 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
+
 import is.handlers.database.DbEpisodes;
 import is.tvpal.R;
 
@@ -26,13 +29,11 @@ public class MyShowsAdapter extends CursorAdapter
     private static final int LAYOUT = R.layout.listview_my_shows;
 
     private LayoutInflater mLayoutInflater;
-    private SparseArray<Bitmap> mPosters;
 
     public MyShowsAdapter(Context context, Cursor c, int flags)
     {
         super(context, c, flags);
         mLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mPosters = new SparseArray<Bitmap>();
     }
 
     static class ViewHolder
@@ -72,23 +73,13 @@ public class MyShowsAdapter extends CursorAdapter
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        final int seriesId = mCursor.getInt(Series.SeriesId);
         viewHolder.title.setText(mCursor.getString(Series.Name));
         viewHolder.genres.setText(mCursor.getString(Series.Genres));
 
-        if(mPosters.get(seriesId) != null)
-        {
-            viewHolder.thumbnail.setImageBitmap(mPosters.get(seriesId));
-        }
-        else
-        {
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inSampleSize = 8;
-
-            Bitmap bmp = new DbEpisodes(mContext).GetSeriesPoster(mCursor.getInt(Series.SeriesId), true);
-            mPosters.put(seriesId, bmp);
-            viewHolder.thumbnail.setImageBitmap(bmp);
-        }
+        Picasso
+                .with(mContext)
+                .load(mCursor.getString(Series.Thumbnail))
+                .into(viewHolder.thumbnail);
 
         return convertView;
     }
@@ -106,6 +97,7 @@ public class MyShowsAdapter extends CursorAdapter
     {
         int SeriesId = 0;
         int Name = 1;
-        int Genres =2;
+        int Genres = 2;
+        int Thumbnail = 3;
     }
 }

@@ -3,4 +3,8 @@
         android:title="@string/update_all"
         android:orderInCategory="100"
         android:showAsAction="never" />
+    <item android:id="@+id/reloadPosters"
+        android:title="@string/reload_posters"
+        android:orderInCategory="200"
+        android:showAsAction="never" />
 </menu>

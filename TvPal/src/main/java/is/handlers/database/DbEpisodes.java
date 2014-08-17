@@ -19,7 +19,7 @@ import is.datacontracts.tvdb.Series;
  * A class to work with Episode Data
  * @author Arnar
  */
-public class DbEpisodes extends DatabaseHandler
+public class DbEpisodes extends DatabaseHandler implements IEpisodes
 {
     public DbEpisodes(Context context)
     {
@@ -32,7 +32,7 @@ public class DbEpisodes extends DatabaseHandler
 
     public Cursor GetCursorOverview(int seriesId)
     {
-        String selectQuery = String.format("select seriesId as _id, overview, name, network, genres, actors, imdbid " +
+        String selectQuery = String.format("select seriesId as _id, overview, name, network, genres, actors, imdbid, thumbnail " +
                 "from series where seriesId = %d", seriesId);
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -99,7 +99,7 @@ public class DbEpisodes extends DatabaseHandler
 
     public Cursor GetCursorMyShows()
     {
-        String selectQuery = String.format("select seriesId as _id, name, genres " +
+        String selectQuery = String.format("select seriesId as _id, name, genres, thumbnail " +
                 "from series order by name");
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -163,7 +163,7 @@ public class DbEpisodes extends DatabaseHandler
             values.put(KEY_S_NAME, series.getSeriesName());
             values.put(KEY_S_NETWORK, series.getNetwork());
             values.put(KEY_S_OVERVIEW, series.getOverview());
-            values.put(KEY_S_THUMBNAIL, series.getPosterByteStream());
+            values.put(KEY_S_THUMBNAIL, "http://thetvdb.com/banners/" + series.getPoster());
             values.put(KEY_S_LASTUPDATED, series.getLastUpdated());
             values.put(KEY_S_GENRES, series.getGenre());
             values.put(KEY_S_ACTORS, series.getActors());

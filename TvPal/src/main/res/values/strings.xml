@@ -95,5 +95,6 @@
     <string name="trakt_watchlist">Add To Watchlist</string>
     <string name="related_movies">Related Movies</string>
     <string name="empty_watchlist">You have no movies in your watchlist</string>
+    <string name="reload_posters">Reload Posters</string>
 
 </resources>

@@ -1,11 +1,11 @@
 package is.gui.shows;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,31 +15,30 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.GridView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import is.gui.base.BaseActivity;
 import is.gui.dialogs.RemoveShowDialog;
-import is.handlers.database.DbEpisodes;
 import is.handlers.adapters.MyShowsAdapter;
-import is.tvdb.TvdbSeriesUpdateAllWorker;
-import is.tvdb.TvdbSeriesUpdateWorker;
+import is.presentation.view.IMyShowsView;
+import is.presentation.presenter.MyShowsPresenter;
 import is.tvpal.R;
-import is.utilities.ConnectionListener;
 
 /**
  * Displays all series that a user has added to his shows
  * @author Arnar
  */
 
-public class MyShowsActivity extends BaseActivity implements AdapterView.OnItemClickListener, RemoveShowDialog.OnRemoveShowListener
+public class MyShowsActivity extends BaseActivity implements AdapterView.OnItemClickListener,
+                                                             RemoveShowDialog.OnRemoveShowListener,
+                                                             IMyShowsView
 {
     public static final String EXTRA_SERIESID = "is.activities.showActivities.SERIESID";
     public static final String EXTRA_NAME = "is.actvities.showActivities.SERIESNAME";
 
-    private DbEpisodes mDB;
-    private GridView mGridView;
     private MyShowsAdapter mAdapter;
     private ProgressBar mProgressBar;
+
+    private MyShowsPresenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -53,13 +52,13 @@ public class MyShowsActivity extends BaseActivity implements AdapterView.OnItemC
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void Initialize()
     {
-        mDB = new DbEpisodes(this);
+        mPresenter = new MyShowsPresenter(this, this);
 
         mProgressBar = (ProgressBar) findViewById(R.id.progressUpdateShows);
-        mGridView = (GridView) findViewById(R.id.myshows_series);
+        GridView mGridView = (GridView) findViewById(R.id.myshows_series);
         mGridView.setOnItemClickListener(this);
 
-        mAdapter = new MyShowsAdapter(this, mDB.GetCursorMyShows(), 0);
+        mAdapter = new MyShowsAdapter(this, mPresenter.GetCursorMyShows(), 0);
         mGridView.setAdapter(mAdapter);
 
         registerForContextMenu(mGridView);
@@ -67,10 +66,29 @@ public class MyShowsActivity extends BaseActivity implements AdapterView.OnItemC
         getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    private void UpdateCursor()
+    @Override
+    public void UpdateCursor()
     {
-        mAdapter.swapCursor(mDB.GetCursorMyShows());
+        mAdapter.swapCursor(mPresenter.GetCursorMyShows());
         mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public ProgressBar GetProgressBar()
+    {
+        return mProgressBar;
+    }
+
+    @Override
+    public MyShowsAdapter GetAdapter()
+    {
+        return mAdapter;
+    }
+
+    @Override
+    public Context GetContext()
+    {
+        return this;
     }
 
     @Override
@@ -94,48 +112,14 @@ public class MyShowsActivity extends BaseActivity implements AdapterView.OnItemC
                 RemoveShowDialog(show.getInt(0), show.getString(1));
                 return true;
             case R.id.updateShow:
-                UpdateShow(position);
+                mPresenter.UpdateShow(position);
                 return true;
             case R.id.seenAllEpisodes:
-                SeenAllEpisodes(position);
+                mPresenter.SetAllEpisodesAsSeen(position);
                 return true;
             default:
                 return super.onContextItemSelected(item);
         }
-    }
-
-    private void RemoveShow(int selectedShow, String seriesTitle)
-    {
-        try
-        {
-            mDB.RemoveShow(selectedShow);
-            UpdateCursor();
-            Toast.makeText(this, String.format("Removed %s from your shows", seriesTitle), Toast.LENGTH_SHORT).show();
-        }
-        catch (Exception ex)
-        {
-            Log.e(getClass().getName(), ex.getMessage());
-        }
-    }
-
-    private void UpdateShow(int position)
-    {
-        Cursor show = (Cursor) mAdapter.getItem(position);
-
-        boolean networkAvailable = ConnectionListener.isNetworkAvailable(this);
-
-        if(networkAvailable)
-            new TvdbSeriesUpdateWorker(this, mProgressBar).execute(show.getInt(0));
-        else
-            Toast.makeText(this, "Connect to a network to update show", Toast.LENGTH_SHORT).show();
-    }
-
-    private void SeenAllEpisodes(int position)
-    {
-        Cursor cursor = (Cursor) mAdapter.getItem(position);
-
-        DbEpisodes db = new DbEpisodes(this);
-        db.SetSeriesSeen(cursor.getInt(0));
     }
 
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l)
@@ -158,21 +142,14 @@ public class MyShowsActivity extends BaseActivity implements AdapterView.OnItemC
                 finish();
                 return true;
             case R.id.updateAllShows:
-                UpdateAllShows();
+                mPresenter.UpdateAllShows();
+                return true;
+            case R.id.reloadPosters:
+                mPresenter.ReloadPosters();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    private void UpdateAllShows()
-    {
-        boolean networkAvailable = ConnectionListener.isNetworkAvailable(this);
-
-        if(networkAvailable)
-            new TvdbSeriesUpdateAllWorker(this, mProgressBar).execute();
-        else
-            Toast.makeText(this, "Connect to a network to update shows", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -192,6 +169,6 @@ public class MyShowsActivity extends BaseActivity implements AdapterView.OnItemC
     @Override
     public void onRemoveShow(int seriesId, String seriesTitle)
     {
-        RemoveShow(seriesId, seriesTitle);
+        mPresenter.RemoveShow(seriesId, seriesTitle);
     }
 }

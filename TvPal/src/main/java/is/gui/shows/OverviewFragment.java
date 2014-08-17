@@ -10,6 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
+
 import is.gui.base.BaseFragment;
 import is.gui.movies.DetailedMovieActivity;
 import is.gui.movies.TraktCommentsActivity;
@@ -52,8 +55,9 @@ public class OverviewFragment extends BaseFragment
 
         if (rootView != null)
         {
-            Bitmap poster = db.GetSeriesPoster(mCursor.getInt(Series.SeriesId), false);
-            ((ImageView) rootView.findViewById(R.id.overviewPicture)).setImageBitmap(poster);
+            ImageView imageView = (ImageView) rootView.findViewById(R.id.overviewPicture);
+            Picasso.with(mContext).load(mCursor.getString(Series.Thumbnail)).into(imageView);
+
             ((TextView) rootView.findViewById(R.id.overviewTitle)).setText(mCursor.getString(Series.Name));
             ((TextView) rootView.findViewById(R.id.overviewText)).setText(mCursor.getString(Series.Overview));
             ((TextView) rootView.findViewById(R.id.overviewNetwork)).setText(mCursor.getString(Series.Network));
@@ -108,5 +112,6 @@ public class OverviewFragment extends BaseFragment
         int Genres = 4;
         int Actors = 5;
         int ImdbId = 6;
+        int Thumbnail = 7;
     }
 }
