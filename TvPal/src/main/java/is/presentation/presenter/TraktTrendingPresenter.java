@@ -35,15 +35,15 @@ public class TraktTrendingPresenter extends BasePresenter<ITraktTrendingView, IT
         return new Callback<List<T>> ()
         {
             @Override
-            public void success(List<T> movies, Response response)
+            public void success(List<T> trending, Response response)
             {
-                if (movies == null)
+                if (trending == null)
                 {
                     View.SetViewVisibility(android.view.View.GONE, android.view.View.VISIBLE);
                 }
                 else
                 {
-                    View.SetAdapter(movies);
+                    View.SetAdapter(trending);
                     View.SetViewVisibility(android.view.View.GONE, android.view.View.GONE);
                 }
             }

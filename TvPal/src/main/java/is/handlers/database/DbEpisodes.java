@@ -70,8 +70,9 @@ public class DbEpisodes extends DatabaseHandler implements IEpisodes
     public Cursor GetCursorUpcoming()
     {
         String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-        String selectQuery = String.format("select episodeId as _id, episodeName, aired, seriesId, season, episode " +
-                "from episodes " +
+        String selectQuery = String.format("select e.episodeId as _id, e.episodeName, e.aired, e.seriesId, e.season, e.episode, s.thumbnail " +
+                "from episodes as e " +
+                "join series as s on e.seriesId = s.seriesId " +
                 "where aired >= '%s' " +
                 "order by aired limit 15", date);
 
@@ -85,8 +86,9 @@ public class DbEpisodes extends DatabaseHandler implements IEpisodes
     public Cursor GetCursorRecent()
     {
         String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-        String selectQuery = String.format("select episodeId as _id, episodeName, aired, seriesId, season, episode " +
-                "from episodes " +
+        String selectQuery = String.format("select e.episodeId as _id, e.episodeName, e.aired, e.seriesId, e.season, e.episode, s.thumbnail " +
+                "from episodes as e " +
+                "join series as s on e.seriesId = s.seriesId " +
                 "where aired < '%s' " +
                 "order by aired desc limit 15", date);
 

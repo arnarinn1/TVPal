@@ -1,6 +1,5 @@
 package is.gui.shows;
 
-import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -24,7 +23,7 @@ public class UpcomingRecentActivity extends BaseFragmentActivity
 
     private void Initialize()
     {
-        UpcomingRecentPagerAdapter mScheduleAdapter = new UpcomingRecentPagerAdapter(getSupportFragmentManager(), this);
+        UpcomingRecentPagerAdapter mScheduleAdapter = new UpcomingRecentPagerAdapter(getSupportFragmentManager());
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -42,12 +41,9 @@ public class UpcomingRecentActivity extends BaseFragmentActivity
 
     public class UpcomingRecentPagerAdapter extends FragmentStatePagerAdapter
     {
-        private Context context;
-
-        public UpcomingRecentPagerAdapter(FragmentManager fm, Context context)
+        public UpcomingRecentPagerAdapter(FragmentManager fm)
         {
             super(fm);
-            this.context = context;
         }
 
         @Override

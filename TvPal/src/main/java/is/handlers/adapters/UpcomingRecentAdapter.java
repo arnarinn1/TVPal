@@ -10,6 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
+
+import is.datacontracts.tvdb.Episode;
 import is.handlers.database.DbEpisodes;
 import is.utilities.DateUtil;
 import is.tvpal.R;
@@ -81,15 +85,7 @@ public class UpcomingRecentAdapter extends CursorAdapter
         viewHolder.episodeNumber.setText(String.format("%dx%d", mCursor.getInt(Episodes.Season), mCursor.getInt(Episodes.Episode)));
         viewHolder.episodeAired.setText(DateUtil.FormatDateEpisode(mCursor.getString(Episodes.Aired)));
 
-        final int seriesId = mCursor.getInt(Episodes.SeriesId);
-
-        if (pictures.get(seriesId) == null)
-        {
-            Bitmap bmp = db.GetSeriesPoster(seriesId, true);
-            pictures.put(seriesId, bmp);
-        }
-
-        viewHolder.episodeImage.setImageBitmap(pictures.get(seriesId));
+        Picasso.with(mContext).load(mCursor.getString(Episodes.Thumbnail)).into(viewHolder.episodeImage);
 
         return convertView;
     }
@@ -111,5 +107,6 @@ public class UpcomingRecentAdapter extends CursorAdapter
         int SeriesId = 3;
         int Season = 4;
         int Episode = 5;
+        int Thumbnail = 6;
     }
 }
