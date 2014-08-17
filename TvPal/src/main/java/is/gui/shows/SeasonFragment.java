@@ -30,7 +30,6 @@ public class SeasonFragment extends BaseFragment implements AdapterView.OnItemCl
 
     private SeasonAdapter mAdapter;
     private DbEpisodes db;
-    private ListView listView;
     private Context mContext;
     private int mSeriesId;
 
@@ -72,7 +71,7 @@ public class SeasonFragment extends BaseFragment implements AdapterView.OnItemCl
 
         View rootView = inflater.inflate(R.layout.fragment_seasons, container, false);
 
-        listView = (ListView) rootView.findViewById(R.id.listviewSeasons);
+        ListView listView = (ListView) rootView.findViewById(R.id.listviewSeasons);
         listView.setOnItemClickListener(this);
         registerForContextMenu(listView);
 

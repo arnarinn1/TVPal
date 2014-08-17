@@ -30,15 +30,11 @@ public class UpcomingRecentAdapter extends CursorAdapter
     private static final int LAYOUT = R.layout.listview_activity;
 
     private LayoutInflater mLayoutInflater;
-    private DbEpisodes db;
-    private SparseArray<Bitmap> pictures;
 
     public UpcomingRecentAdapter(Context context, Cursor c, int flags)
     {
         super(context, c, flags);
         mLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.pictures = new SparseArray<Bitmap>();
-        this.db = new DbEpisodes(context);
     }
 
     static class ViewHolder
@@ -61,31 +57,31 @@ public class UpcomingRecentAdapter extends CursorAdapter
             throw new IllegalStateException("Failed to move cursor to position  " + position);
         }
 
-        final ViewHolder viewHolder;
+        final ViewHolder holder;
 
         if (convertView == null)
         {
             convertView = newView(mContext, mCursor, parent);
 
-            viewHolder = new ViewHolder();
+            holder = new ViewHolder();
 
-            viewHolder.episodeImage = (ImageView) convertView.findViewById(R.id.activityImg);
-            viewHolder.episodeName = (TextView) convertView.findViewById(R.id.activityTitle);
-            viewHolder.episodeAired = (TextView) convertView.findViewById(R.id.activityAirDate);
-            viewHolder.episodeNumber = (TextView) convertView.findViewById(R.id.activityEpisode);
+            holder.episodeImage = (ImageView) convertView.findViewById(R.id.activityImg);
+            holder.episodeName = (TextView) convertView.findViewById(R.id.activityTitle);
+            holder.episodeAired = (TextView) convertView.findViewById(R.id.activityAirDate);
+            holder.episodeNumber = (TextView) convertView.findViewById(R.id.activityEpisode);
 
-            convertView.setTag(viewHolder);
+            convertView.setTag(holder);
         }
         else
         {
-            viewHolder = (ViewHolder) convertView.getTag();
+            holder = (ViewHolder) convertView.getTag();
         }
 
-        viewHolder.episodeName.setText(mCursor.getString(Episodes.EpisodeName));
-        viewHolder.episodeNumber.setText(String.format("%dx%d", mCursor.getInt(Episodes.Season), mCursor.getInt(Episodes.Episode)));
-        viewHolder.episodeAired.setText(DateUtil.FormatDateEpisode(mCursor.getString(Episodes.Aired)));
+        holder.episodeName.setText(mCursor.getString(Episodes.EpisodeName));
+        holder.episodeNumber.setText(String.format("%dx%d", mCursor.getInt(Episodes.Season), mCursor.getInt(Episodes.Episode)));
+        holder.episodeAired.setText(DateUtil.FormatDateEpisode(mCursor.getString(Episodes.Aired)));
 
-        Picasso.with(mContext).load(mCursor.getString(Episodes.Thumbnail)).into(viewHolder.episodeImage);
+        Picasso.with(mContext).load(mCursor.getString(Episodes.Thumbnail)).into(holder.episodeImage);
 
         return convertView;
     }

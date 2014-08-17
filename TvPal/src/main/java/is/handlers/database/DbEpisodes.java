@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.locks.Condition;
 
 import is.datacontracts.tvdb.Episode;
 import is.datacontracts.tvdb.Series;
@@ -21,9 +22,12 @@ import is.datacontracts.tvdb.Series;
  */
 public class DbEpisodes extends DatabaseHandler implements IEpisodes
 {
+    private SqlBuilder builder;
+
     public DbEpisodes(Context context)
     {
         super(context);
+        this.builder = new SqlBuilder();
     }
 
     /*
@@ -32,11 +36,19 @@ public class DbEpisodes extends DatabaseHandler implements IEpisodes
 
     public Cursor GetCursorOverview(int seriesId)
     {
-        String selectQuery = String.format("select seriesId as _id, overview, name, network, genres, actors, imdbid, thumbnail " +
-                "from series where seriesId = %d", seriesId);
+        List<String> columns = new ArrayList<String>();
+        columns.add(KEY_S_SERIESID); columns.add(KEY_S_OVERVIEW);
+        columns.add(KEY_S_NAME);     columns.add(KEY_S_NETWORK);
+        columns.add(KEY_S_GENRES);   columns.add(KEY_S_ACTORS);
+        columns.add(KEY_S_IMDBID);   columns.add(KEY_S_THUMBNAIL);
+
+        String query = builder.AddSelectColumns(columns)
+                              .AddTable(TABLE_SERIES)
+                              .AddWhereClause(KEY_S_SERIESID, Integer.toString(seriesId), SqlBuilder.Comparison.Equals)
+                              .Build();
 
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
+        Cursor cursor = db.rawQuery(query, null);
 
         cursor.moveToFirst();
         return cursor;
@@ -44,11 +56,17 @@ public class DbEpisodes extends DatabaseHandler implements IEpisodes
 
     public Cursor GetCursorSeasons(int seriesId)
     {
-        String selectQuery = "SELECT distinct season as _id, seriesId FROM episodes " +
-                "WHERE seriesId = " + seriesId + " order by season desc";
+        List<String> columns = new ArrayList<String>();
+        columns.add("distinct " + KEY_E_SEASON); columns.add(KEY_E_SERIESID);
+
+        String query = builder.AddSelectColumns(columns)
+                              .AddTable(TABLE_EPISODES)
+                              .AddWhereClause(KEY_E_SERIESID, Integer.toString(seriesId), SqlBuilder.Comparison.Equals)
+                              .AddOrderByColumn(KEY_E_SEASON, true)
+                              .Build();
 
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
+        Cursor cursor = db.rawQuery(query, null);
 
         cursor.moveToFirst();
         return cursor;
@@ -56,12 +74,21 @@ public class DbEpisodes extends DatabaseHandler implements IEpisodes
 
     public Cursor GetCursorEpisodes(int seriesId, int seasonNumber)
     {
-        String selectQuery = String.format("select episodeId as _id, seriesId, season, episode, episodeName, aired, seen " +
-                "from episodes where seriesId = %d and season = %d" +
-                " order by 0+episode", seriesId, seasonNumber);
+        List<String> columns = new ArrayList<String>();
+        columns.add(KEY_E_EPISODEID);    columns.add(KEY_E_SERIESID);
+        columns.add(KEY_E_SEASON);       columns.add(KEY_E_EPISODE);
+        columns.add(KEY_E_EPISODENAME);  columns.add(KEY_E_AIRED);
+        columns.add(KEY_E_SEEN);
+
+        String query = builder.AddSelectColumns(columns)
+                              .AddTable(TABLE_EPISODES)
+                              .AddWhereClause(KEY_E_SERIESID, Integer.toString(seriesId), SqlBuilder.Comparison.Equals)
+                              .AddWhereAndClause(KEY_E_SEASON, Integer.toString(seasonNumber), SqlBuilder.Comparison.Equals)
+                              .AddOrderByColumn("0+" + KEY_E_EPISODE, false)
+                              .Build();
 
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
+        Cursor cursor = db.rawQuery(query, null);
 
         cursor.moveToFirst();
         return cursor;
@@ -101,11 +128,17 @@ public class DbEpisodes extends DatabaseHandler implements IEpisodes
 
     public Cursor GetCursorMyShows()
     {
-        String selectQuery = String.format("select seriesId as _id, name, genres, thumbnail " +
-                "from series order by name");
+        List<String> columns = new ArrayList<String>();
+        columns.add(KEY_S_SERIESID); columns.add(KEY_S_NAME);
+        columns.add(KEY_S_GENRES);   columns.add(KEY_S_THUMBNAIL);
+
+        String query = builder.AddSelectColumns(columns)
+                              .AddTable(TABLE_SERIES)
+                              .AddOrderByColumn(KEY_S_NAME, false)
+                              .Build();
 
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
+        Cursor cursor = db.rawQuery(query, null);
 
         cursor.moveToFirst();
         return cursor;
@@ -113,12 +146,22 @@ public class DbEpisodes extends DatabaseHandler implements IEpisodes
 
     public Cursor GetCursorEpisodesDetailed(int seriesId, int seasonNumber)
     {
-        String selectQuery = String.format("select episodeId as _id, episode, episodeName, season, overview, aired, director, rating, seen, guestStars, seriesId " +
-                "from episodes where seriesId = %d and season = %d" +
-                " order by 0+episode", seriesId, seasonNumber);
+        List<String> columns = new ArrayList<String>();
+        columns.add(KEY_E_EPISODEID);     columns.add(KEY_E_EPISODE);
+        columns.add(KEY_E_EPISODENAME);   columns.add(KEY_E_SEASON);
+        columns.add(KEY_E_OVERVIEW);      columns.add(KEY_E_AIRED);
+        columns.add(KEY_E_DIRECTOR);      columns.add(KEY_E_RATING);
+        columns.add(KEY_E_SEEN);          columns.add(KEY_E_GUESTSTARS);
+        columns.add(KEY_E_SERIESID);
 
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
+        String query = builder.AddSelectColumns(columns)
+                              .AddTable(TABLE_EPISODES)
+                              .AddWhereClause(KEY_E_SERIESID, Integer.toString(seriesId), SqlBuilder.Comparison.Equals)
+                              .AddWhereAndClause(KEY_E_SEASON, Integer.toString(seasonNumber), SqlBuilder.Comparison.Equals)
+                              .AddOrderByColumn("0+" + KEY_E_EPISODE, false)
+                              .Build();
+
+        Cursor cursor = this.getWritableDatabase().rawQuery(query, null);
 
         cursor.moveToFirst();
         return cursor;
