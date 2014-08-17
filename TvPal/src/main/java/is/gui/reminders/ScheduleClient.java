@@ -23,7 +23,7 @@ public class ScheduleClient
     }
 
     /**
-     * Call this to connect your activity to your service
+     * Callback this to connect your activity to your service
      */
     public void doBindService()
     {

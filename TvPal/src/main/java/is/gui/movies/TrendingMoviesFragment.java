@@ -1,6 +1,7 @@
 package is.gui.movies;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,17 +25,12 @@ import is.gui.base.BaseFragment;
 import is.datacontracts.trakt.TraktMovieData;
 import is.handlers.adapters.TraktMoviesAdapter;
 import is.handlers.database.DbMovies;
+import is.presentation.presenter.TraktTrendingPresenter;
+import is.presentation.view.ITraktTrendingView;
 import is.tvpal.R;
-import is.utilities.ListUtil;
 import is.utilities.StringUtil;
-import is.webservices.ITraktService;
-import is.webservices.RetrofitUtil;
-import retrofit.Callback;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
-public class TrendingMoviesFragment extends BaseFragment implements AdapterView.OnItemClickListener
+public class TrendingMoviesFragment extends BaseFragment implements AdapterView.OnItemClickListener, ITraktTrendingView
 {
     public static final String EXTRA_MOVIEID = "is.activites.movieActivities.MOVIEID";
     public static final String EXTRA_MOVIEPOSTER = "is.activites.movieActivities.MOVIEPOSTER";
@@ -44,6 +40,8 @@ public class TrendingMoviesFragment extends BaseFragment implements AdapterView.
     @InjectView(R.id.traktNoResults)    TextView mNoResults;
 
     private TraktMoviesAdapter mAdapter;
+
+    private TraktTrendingPresenter mPresenter;
 
     public TrendingMoviesFragment() {}
 
@@ -60,18 +58,16 @@ public class TrendingMoviesFragment extends BaseFragment implements AdapterView.
         super.onActivityCreated(savedInstanceState);
 
         mGridView.setOnItemClickListener(this);
-
         registerForContextMenu(mGridView);
 
-        RestAdapter restAdapter = RetrofitUtil.TraktRestAdapterInstance();
-        ITraktService service = restAdapter.create(ITraktService.class);
-
-        service.getTrendingMovies(trendingMoviesCallback);
+        mPresenter.GetTrendingMovies();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
+        mPresenter = new TraktTrendingPresenter(this);
+
         View rootView = inflater.inflate(R.layout.fragment_trakt_trending, container, false);
         ButterKnife.inject(this, rootView);
         return rootView;
@@ -127,34 +123,24 @@ public class TrendingMoviesFragment extends BaseFragment implements AdapterView.
         }
     }
 
-    Callback<List<TraktMovieData>> trendingMoviesCallback = new Callback<List<TraktMovieData>>()
-    {
-        @Override
-        public void success(List<TraktMovieData> movies, Response response)
-        {
-            if (movies == null)
-            {
-                SetViewVisibility(View.GONE, View.VISIBLE);
-            }
-            else
-            {
-                ListUtil.FilterGenre(movies, "Horror");
-                mAdapter = new TraktMoviesAdapter(activity.getContext(), R.layout.listview_trakt_movies, movies);
-                mGridView.setAdapter(mAdapter);
-                SetViewVisibility(View.GONE, View.GONE);
-            }
-        }
-
-        @Override
-        public void failure(RetrofitError retrofitError)
-        {
-            SetViewVisibility(View.GONE, View.VISIBLE);
-        }
-    };
-
-    private void SetViewVisibility(int progressBarVisibility, int noResultsVisibility)
+    @Override
+    public void SetViewVisibility(int progressBarVisibility, int noResultsVisibility)
     {
         mProgressBar.setVisibility(progressBarVisibility);
         mNoResults.setVisibility(noResultsVisibility);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> void SetAdapter(List<T> movies)
+    {
+        mAdapter = new TraktMoviesAdapter(activity.getContext(), R.layout.listview_trakt_movies, (List<TraktMovieData>)movies);
+        mGridView.setAdapter(mAdapter);
+    }
+
+    @Override
+    public Context GetContext()
+    {
+        return activity.getContext();
     }
 }

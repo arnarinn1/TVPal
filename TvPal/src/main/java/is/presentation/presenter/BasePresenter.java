@@ -1,5 +1,7 @@
 package is.presentation.presenter;
 
+import is.presentation.view.IView;
+
 /**
  * A generic Presenter class
  */

@@ -1,4 +1,4 @@
-package is.presentation.presenter;
+package is.presentation.view;
 
 import android.content.Context;
 
